@@ -1,7 +1,9 @@
 import {useState} from "react";
 
 
-const Button = ({onClick, text}) => {
+const Button = (props) => {
+    console.log(props);
+    const {onClick, text} = props;
     return (
         <button onClick={onClick}>
             {text}
@@ -51,6 +53,7 @@ const App = () => {
                 <Button onClick={handleRightClick} text="right" />
                 {right}
                 <History allClicks={allClicks} />
+
             </div>
         </>
     );
