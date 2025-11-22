@@ -1,141 +1,72 @@
-import {useState} from "react";
+import { useState } from 'react'
 
+const Header = () => <h1>give feedback</h1>
+const Button = ({ handleClick, text }) => (
+    <button onClick={handleClick}>{text}</button>
+)
 
-const Button = (props) => {
-    console.log(props);
-    const {onClick, text} = props;
-    return (
-        <button onClick={onClick}>
-            {text}
-        </button>
-    )
-}
+const Contents = ({ good, neutral, bad }) => {
+    const total = good + neutral + bad
 
-// Moved History out of the App component to a top-level declaration
-const History = (props) => {
-    if (!props.allClicks || props.allClicks.length === 0) {
+    if (total === 0) {
         return (
             <div>
-                the app is used by pressing the buttons
+                <h2>statistics</h2>
+                <p>No feedback given</p>
             </div>
         )
     }
 
+    const average = (good - bad) / total
+    const positive = (good / total) * 100
+
     return (
         <div>
-            button press history: {props.allClicks.join(' ')}
+            <h2>statistics</h2>
+            <table>
+                <tbody>
+                    <Statistic text="good" value={good} />
+                    <Statistic text="neutral" value={neutral} />
+                    <Statistic text="bad" value={bad} />
+                    <Statistic text="all" value={total} />
+                    <Statistic text="average" value={average} />
+                    <Statistic text="positive" value={positive + ' %'} />
+                </tbody>
+            </table>
         </div>
     )
 }
+
+const Statistic = ({ text, value }) => (
+    <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+    </tr>
+)
 
 const App = () => {
-    const [value, setValue ] = useState(10);
+    // save clicks of each button to its own state
+    const [good, setGood] = useState(0)
+    const [neutral, setNeutral] = useState(0)
+    const [bad, setBad] = useState(0)
 
     return (
         <div>
-            {value}
-            <Button onClick={() => setValue(1)}>Reset to zero</Button>
+            <Header />
+            <div>
+                <Button handleClick={() => setGood(good + 1) } text="good" />
+                <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
+                <Button handleClick={() => setBad(bad + 1)} text="bad" />
+            </div>
+            <br/>
+            <Statistic text="good" value={good} />
+            <Statistic text="neutral" value={neutral} />
+            <Statistic text="bad" value={bad} />
+
+            <br />
+            <Contents good={good} neutral={neutral} bad={bad} />
         </div>
     )
 }
 
-// const App = () => {
-//     const [left, setLeft] = useState(0);
-//     const [right, setRight] = useState(0);
-//     const [allClicks, setAll] = useState([]);
-//
-//     const handleLeftClick = () => {
-//         setAll(allClicks.concat('L'));
-//         const updatedLeft = left + 1;
-//         setLeft(updatedLeft);
-//     }
-//
-//     const handleRightClick = () => {
-//         setAll(allClicks.concat('R'));
-//         const updatedRight = right + 1;
-//         setRight(updatedRight);
-//     }
-//
-//     return (
-//         <>
-//             <div>
-//                 {left}
-//                 <Button onClick={handleLeftClick} text="left" />
-//                 <Button onClick={handleRightClick} text="right" />
-//                 {right}
-//                 <History allClicks={allClicks} />
-//
-//             </div>
-//         </>
-//     );
-// }
-
-
-export default App;
-
-
-// const Header = (props) => {
-//     return <h1>{props.course}</h1>
-// }
-//
-// const Part = (props) => {
-//
-//     return (
-//         <p>
-//             {props.name} {props.exercises}
-//         </p>
-//     )
-// }
-//
-// const Content = (props) => {
-//     console.log(JSON.stringify(props, null, 2));
-//     return (
-//         <div>
-//             <Part name={props.part[0].name} exercises={props.part[0].exercises} />
-//             <Part name={props.part[1].name} exercises={props.part[1].exercises} />
-//             <Part name={props.part[2].name} exercises={props.part[2].exercises}/>
-//         </div>
-//     )
-// }
-//
-// const Total = (props) => {
-//     return (
-//         <p>
-//             Number of exercises {props.exercises[0].exercises + props.exercises[1].exercises + props.exercises[2].exercises}
-//         </p>
-//     )
-// }
-//
-// const App = () => {
-//     const course = {
-//         name: 'Half Stack application development',
-//         parts: [
-//             {
-//                 name: 'Fundamentals of React',
-//                 exercises: 10
-//             },
-//             {
-//                 name: 'Using props to pass data',
-//                 exercises: 7
-//             },
-//             {
-//                 name: 'State of a component',
-//                 exercises: 14
-//             }
-//         ]
-//     }
-//
-//     return (
-//         <div>
-//             <Header course={course.name} />
-//             <Content
-//                 part={course.parts}
-//             />
-//             <Total
-//                 exercises={course.parts}
-//             />
-//         </div>
-//     )
-// }
-//
-// export default App
+export default App
