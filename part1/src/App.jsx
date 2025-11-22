@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-const Header = () => <h1>give feedback</h1>
+const Header = ({headerText}) => <h1>{headerText}</h1>
 const Statistic = ({ text, value }) => (
     <tr>
         <td>{text}</td>
@@ -43,7 +43,25 @@ const Contents = ({ good, neutral, bad }) => {
     )
 }
 
+const ShowMostVotedAnecdote = ({anecdotes, votes}) => {
+    const maxVotes = Math.max(...votes)
+    const indexOfMax = votes.indexOf(maxVotes)
 
+    if (maxVotes === 0) {
+        return (
+            <div>
+                <p>No votes given yet</p>
+            </div>
+        )
+    }
+
+    return (
+        <div>
+            <h2>{anecdotes[indexOfMax]}</h2>
+            <p>has {maxVotes} votes</p>
+        </div>
+    )
+}
 
 const App = () => {
     // save clicks of each button to its own state
@@ -86,7 +104,7 @@ const App = () => {
 
     return (
         <div>
-            <Header />
+            <Header headerText={'Give FeedBack'}/>
             <div>
                 <Button handleClick={() => setGood(good + 1) } text="good" />
                 <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
@@ -101,6 +119,10 @@ const App = () => {
             <br />
             <Button handleClick={handleVote} text="Vote" />
             <Button handleClick={() => handleAnecdote()} text="Next Anecdote" />
+
+            <Header headerText={'Most voted Anecdote'}/>
+
+            <ShowMostVotedAnecdote anecdotes={anecdotes} votes={votes} />
         </div>
     )
 }
