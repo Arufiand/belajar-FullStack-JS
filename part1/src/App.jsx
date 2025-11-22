@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 
 const Header = () => <h1>give feedback</h1>
 const Statistic = ({ text, value }) => (
@@ -64,9 +64,23 @@ const App = () => {
 
     const [selected, setSelected] = useState(0)
 
+    // votes state: an array with one element per anecdote
+    const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
+
     const handleAnecdote = () => {
         const randomIndex = Math.floor(Math.random() * anecdotes.length)
         setSelected(randomIndex)
+    }
+
+    useEffect(() => {
+        console.log('votes state changed:', votes)
+    }, [votes, setVotes])
+
+    // handle voting: copy, modify, set state
+    const handleVote = () => {
+        const copy = [...votes]
+        copy[selected] += 1
+        setVotes(copy)
     }
 
 
@@ -81,8 +95,11 @@ const App = () => {
             <br/>
             <br />
             <Contents good={good} neutral={neutral} bad={bad} />
-            {anecdotes[selected]}
+            <h2>Anecdote of the day</h2>
+            <div>{anecdotes[selected]}</div>
+            <div>has {votes[selected]} votes</div>
             <br />
+            <Button handleClick={handleVote} text="Vote" />
             <Button handleClick={() => handleAnecdote()} text="Next Anecdote" />
         </div>
     )
