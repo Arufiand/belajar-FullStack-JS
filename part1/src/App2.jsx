@@ -1,53 +1,54 @@
-function Course(props) {
-    const { course } = props
+import NotesComponent from "../components/notes.jsx";
+import {useState} from "react";
 
-    return (
-        <div>
-            <h1>{course.name}</h1>
-            <ul>
-                {course.parts.map(part => (
-                    <li key={part.id}>
-                        {part.name} {part.exercises}
-                    </li>
-                ))}
-            </ul>
-        </div>
+const App = (props) => {
+    const [notes, setNotes] = useState(props.notes)
+
+    const [newNote, setNewNote] = useState(
+        'a new note...'
     )
-}
-const TotalExercises = (parts) => {
-    return parts.reduce((sum, part) => sum + part.exercises, 0)
-}
+    const [showAll, setShowAll] = useState(true)
 
-const App = () => {
-    const course = {
-        id: 1,
-        name: 'Half Stack application development',
-        parts: [
-            {
-                name: 'Fundamentals of React',
-                exercises: 10,
-                id: 1
-            },
-            {
-                name: 'Using props to pass data',
-                exercises: 7,
-                id: 2
-            },
-            {
-                name: 'State of a component',
-                exercises: 14,
-                id: 3
-            }
-        ]
+    const notesToShow = showAll ? notes : notes.filter(note => note.important)
+
+    const addNote = (event) => {
+        event.preventDefault()
+        const noteObject = {
+            content: newNote,
+            important: Math.random() < 0.5,
+            id: notes.length + 1,
+        }
+
+        setNotes(notes.concat(noteObject))
+        setNewNote('')
+        console.log('button clicked', event.target)
+    }
+
+    const handleNoteChange = (event) => {
+        console.log('button clicked', event.target.value)
+        setNewNote(event.target.value)
     }
 
     return (
-        <>
-          <Course course={course} />
-            <p>Total exercises: {TotalExercises(course.parts)}</p>
-        </>
-)
+        <div>
+            <h1>Notes</h1>
+            <div>
+                <button onClick={() => setShowAll(!showAll)}>
+                    show {showAll ? 'important' : 'all'}
+                </button>
+            </div>
+            <ul>
+                {notesToShow.map(note =>
+                    <NotesComponent key={note.id} note={note} />
+                )}
+            </ul>
+            <form onSubmit={addNote}>
 
+                <input value={newNote} onChange={handleNoteChange} />
+                <button type="submit">save</button>
+            </form>
+        </div>
+    )
 }
 
-export default App
+export default App;
