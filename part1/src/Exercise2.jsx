@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import FilterComponent from '../components/filter.component.jsx'
+import PersonForm from '../components/personform.component.jsx'
+import Persons from '../components/persons.component.jsx'
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -45,33 +48,32 @@ const App = () => {
     }
 
     const checkDuplicate = (name) => {
-        // return persons.some(person => person.name === name);
-        return persons.some(person => person.name === name && person.number === person.number);
+        // fixed: compare names only
+        return persons.some(person => person.name === name);
     }
     const personsToShow = filter.trim() === ''
         ? persons
         : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 
-
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                filter shown with: <input value={filter} onChange={handleFilterChange} />
-            </div>
-            <form onSubmit={addName}>
-                <div>
-                    name: <input value={newName} onChange={handleNameChange}  />
-                </div>
-                <div>number: <input value={newNumber} onChange={handleNumberChange}/></div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
-            <h2>Numbers</h2>
-            {personsToShow.map(person =>
-                <div key={person.id}>{person.name} Phone Number {person.number}</div>
-            )}
+
+            <FilterComponent filter={filter} handleFilterChange={handleFilterChange} />
+
+            <h3>Add a new</h3>
+
+            <PersonForm
+                newName={newName}
+                newNumber={newNumber}
+                handleNameChange={handleNameChange}
+                handleNumberChange={handleNumberChange}
+                addName={addName}
+            />
+
+            <h3>Numbers</h3>
+
+            <Persons personsToShow={personsToShow} />
 
             <div>debug: {newName}</div>
         </div>
