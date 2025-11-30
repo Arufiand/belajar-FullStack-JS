@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import App from './App2.jsx'
-import Excercise2 from "./Excercise2.jsx";
 import {StrictMode} from "react";
+import Exercise2 from "./Exercise2.jsx";
 
 const notes = [
     {
@@ -25,6 +25,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     // <App notes={notes} />
     <StrictMode>
 
-    <Excercise2 />
+    <Exercise2 />
     </StrictMode>
 )
