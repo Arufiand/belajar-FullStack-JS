@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: 'Arto Hellas' }
+        { name: 'Arto Hellas', number : '123-14141' }
     ])
     const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
 
     const handleNameChange = (event) => {
         console.log(event.target.value)
@@ -19,15 +20,24 @@ const App = () => {
         }
 
         const nameObject = {
-            name: newName
+            name: newName,
+            number: newNumber,
         }
         setPersons(persons.concat(nameObject))
         setNewName('')
+        setNewNumber('')
         // Add the new name to the persons array
     }
 
+    const handleNumberChange = (event) => {
+        console.log(event.target.value)
+        setNewNumber(event.target.value)
+        // Implement number change handling if needed
+    }
+
     const checkDuplicate = (name) => {
-        return persons.some(person => person.name === name);
+        // return persons.some(person => person.name === name);
+        return persons.find(person => person.name === name && person.number === person.number);
     }
 
     return (
@@ -35,15 +45,16 @@ const App = () => {
             <h2>Phonebook</h2>
             <form onSubmit={addName}>
                 <div>
-                    name: <input onChange={handleNameChange}  />
+                    name: <input value={newName} onChange={handleNameChange}  />
                 </div>
+                <div>number: <input value={newNumber} onChange={handleNumberChange}/></div>
                 <div>
                     <button type="submit">add</button>
                 </div>
             </form>
             <h2>Numbers</h2>
             {persons.map(person =>
-            <div key={person.name}>{person.name}</div>
+            <div key={person.name}>{person.name} Phone Number {person.number}</div>
             )}
 
             <div>debug: {newName}</div>
