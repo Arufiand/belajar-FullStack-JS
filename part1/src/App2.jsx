@@ -2,7 +2,7 @@ import NotesComponent from "../components/notes.jsx";
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const App = (props) => {
+const App = () => {
     const [notes, setNotes] = useState([])
 
     const [newNote, setNewNote] = useState(
@@ -24,6 +24,16 @@ const App = (props) => {
 
     useEffect(hook, [])
 
+    const toggleImportanceOf = (id) => {
+        const url = `http://localhost:3001/notes/${id}`
+        const note = notes.find(n => n.id === id)
+        const changedNote = { ...note, important: !note.important }
+
+        axios.put(url, changedNote).then(response => {
+            setNotes(notes.map(note => note.id === id ? response.data : note))
+        })
+    }
+
     const addNote = (event) => {
         event.preventDefault()
         const noteObject = {
@@ -34,7 +44,7 @@ const App = (props) => {
 
         axios
             .post('http://localhost:3001/notes', noteObject)
-            .then(response => {
+            .then(_ => {
                 setNotes(notes.concat(noteObject))
                 setNewNote('')
             })
@@ -56,7 +66,7 @@ const App = (props) => {
             </div>
             <ul>
                 {notesToShow.map(note =>
-                    <NotesComponent key={note.id} note={note} />
+                    <NotesComponent key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)}/>
                 )}
             </ul>
             <form onSubmit={addNote}>
