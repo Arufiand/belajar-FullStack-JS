@@ -1,90 +1,95 @@
-import {useEffect, useState} from 'react'
-import FilterComponent from '../components/filter.component.jsx'
-import PersonForm from '../components/personform.component.jsx'
-import Persons from '../components/persons.component.jsx'
+import { useEffect, useState } from "react";
+import FilterComponent from "../components/filter.component.jsx";
+import PersonForm from "../components/personform.component.jsx";
+import Persons from "../components/persons.component.jsx";
 import axios from "axios";
 
 const App = () => {
-    const [persons, setPersons] = useState([
+  const [persons, setPersons] = useState([]);
 
-    ]);
-
-    useEffect(() => {
-        async function fetchPersons () {
-            const personData = await axios.get('http://localhost:3001/persons');
-            setPersons(personData.data);
-        }
-        fetchPersons();
-    }, []);
-
-    const [filter, setFilter] = useState('')
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-
-    const handleFilterChange = (event) => {
-        setFilter(event.target.value)
+  useEffect(() => {
+    async function fetchPersons() {
+      const personData = await axios.get("http://localhost:3001/persons");
+      setPersons(personData.data);
     }
 
-    const handleNameChange = (event) => {
-        console.log(event.target.value)
-        setNewName(event.target.value)
-    }
-    const addName = (event) => {
-        event.preventDefault()
-        console.log('button clicked', event.target)
-        if(checkDuplicate(newName)) {
-            alert(`${newName} is already added to phonebook`)
-            return
-        }
+    fetchPersons();
+  }, []);
 
-        const nameObject = {
-            name: newName,
-            number: newNumber,
-            id : persons.length + 1,
-        }
-        setPersons(persons.concat(nameObject))
-        setNewName('')
-        setNewNumber('')
-        // Add the new name to the persons array
-    }
+  const [filter, setFilter] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
-    const handleNumberChange = (event) => {
-        console.log(event.target.value)
-        setNewNumber(event.target.value)
-        // Implement number change handling if needed
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
+  const handleNameChange = (event) => {
+    console.log(event.target.value);
+    setNewName(event.target.value);
+  };
+  const addName = (event) => {
+    event.preventDefault();
+    console.log("button clicked", event.target);
+    if (checkDuplicate(newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
     }
 
-    const checkDuplicate = (name) => {
-        // fixed: compare names only
-        return persons.some(person => person.name === name);
-    }
-    const personsToShow = filter.trim() === ''
-        ? persons
-        : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+    const nameObject = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    };
+    setPersons(persons.concat(nameObject));
+    setNewName("");
+    setNewNumber("");
+    // Add the new name to the persons array
+  };
 
-    return (
-        <div>
-            <h2>Phonebook</h2>
+  const handleNumberChange = (event) => {
+    console.log(event.target.value);
+    setNewNumber(event.target.value);
+    // Implement number change handling if needed
+  };
 
-            <FilterComponent filter={filter} handleFilterChange={handleFilterChange} />
+  const checkDuplicate = (name) => {
+    // fixed: compare names only
+    return persons.some((person) => person.name === name);
+  };
+  const personsToShow =
+    filter.trim() === ""
+      ? persons
+      : persons.filter((person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase()),
+        );
 
-            <h3>Add a new</h3>
+  return (
+    <div>
+      <h2>Phonebook</h2>
 
-            <PersonForm
-                newName={newName}
-                newNumber={newNumber}
-                handleNameChange={handleNameChange}
-                handleNumberChange={handleNumberChange}
-                addName={addName}
-            />
+      <FilterComponent
+        filter={filter}
+        handleFilterChange={handleFilterChange}
+      />
 
-            <h3>Numbers</h3>
+      <h3>Add a new</h3>
 
-            <Persons personsToShow={personsToShow} />
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addName={addName}
+      />
 
-            <div>debug: {newName}</div>
-        </div>
-    )
-}
+      <h3>Numbers</h3>
 
-export default App
+      <Persons personsToShow={personsToShow} />
+
+      <div>debug: {newName}</div>
+    </div>
+  );
+};
+
+export default App;
