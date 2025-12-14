@@ -5,7 +5,7 @@ import Exercise2 from "./Exercise2.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <StrictMode>
-        {/*<App/>*/}
+        <App/>
         <Exercise2 />
     </StrictMode>
 )
