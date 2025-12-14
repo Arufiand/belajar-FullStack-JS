@@ -12,18 +12,17 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   useEffect(() => {
-    noteService.getAll().then((response) => {
-      setNotes(response.data);
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes);
     });
   }, []);
 
   const toggleImportanceOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`;
     const note = notes.find((n) => n.id === id);
     const changedNote = { ...note, important: !note.important };
 
-    noteService.update(id, changedNote).then((response) => {
-      setNotes(notes.map((note) => (note.id === id ? response.data : note)));
+    noteService.update(id, changedNote).then((returnedNote) => {
+      setNotes(notes.map((note) => (note.id === id ? returnedNote : note)));
     });
   };
 
@@ -35,8 +34,8 @@ const App = () => {
       id: notes.length + 1,
     };
 
-    noteService.create(noteObject).then((response) => {
-      setNotes(notes.concat(response.data));
+    noteService.create(noteObject).then((returnedNote) => {
+      setNotes(notes.concat(returnedNote));
       setNewNote("");
     });
   };
