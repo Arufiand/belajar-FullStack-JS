@@ -4,7 +4,6 @@ import PersonForm from "../components/personform.component.jsx";
 import Persons from "../components/persons.component.jsx";
 
 import personServices from "./services/axios.js";
-import noteService from "./services/axios.js";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -39,7 +38,7 @@ const App = () => {
       id: persons.length + 1,
     };
     personServices.create("persons", nameObject).then((returnedObject) => {
-      setPersons(persons.concat(nameObject));
+      setPersons(persons.concat(returnedObject.data));
       setNewName("");
       setNewNumber("");
     });
@@ -62,6 +61,21 @@ const App = () => {
           person.name.toLowerCase().includes(filter.toLowerCase()),
         );
 
+  const handleDeletePerson = (id, name) => {
+    if (!window.confirm(`Delete ${name}?`)) return;
+
+    personServices
+      .remove("persons", id)
+      .then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      })
+      .catch((error) => {
+        console.error("Failed to delete person:", error);
+        alert(`Information of ${name} has already been removed from server`);
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -83,7 +97,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} onDelete={handleDeletePerson} />
 
       <div>debug: {newName}</div>
     </div>

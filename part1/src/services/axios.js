@@ -18,4 +18,8 @@ const update = (path, id, newObject) => {
   return axios.put(`${url(path)}/${id}`, newObject);
 };
 
-export default { getAll, create, update };
+const remove = (path, id) => {
+  return axios.delete(`${url(path)}/${id}`);
+};
+
+export default { getAll, create, update, remove };
