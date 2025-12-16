@@ -12,8 +12,8 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   useEffect(() => {
-    noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
+    noteService.getAll().then((response) => {
+      setNotes(response.data);
     });
   }, []);
 
