@@ -2,23 +2,21 @@ import { useEffect, useState } from "react";
 import FilterComponent from "../components/filter.component.jsx";
 import PersonForm from "../components/personform.component.jsx";
 import Persons from "../components/persons.component.jsx";
-import axios from "axios";
+
+import personServices from "./services/axios.js";
+import noteService from "./services/axios.js";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
-  useEffect(() => {
-    async function fetchPersons() {
-      const personData = await axios.get("http://localhost:3001/persons");
-      setPersons(personData.data);
-    }
-
-    fetchPersons();
-  }, []);
-
   const [filter, setFilter] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+
+  useEffect(() => {
+    personServices.getAll("persons").then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -30,7 +28,6 @@ const App = () => {
   };
   const addName = (event) => {
     event.preventDefault();
-    console.log("button clicked", event.target);
     if (checkDuplicate(newName)) {
       alert(`${newName} is already added to phonebook`);
       return;
@@ -41,10 +38,11 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-    setPersons(persons.concat(nameObject));
-    setNewName("");
-    setNewNumber("");
-    // Add the new name to the persons array
+    personServices.create("persons", nameObject).then((returnedObject) => {
+      setPersons(persons.concat(nameObject));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const handleNumberChange = (event) => {
