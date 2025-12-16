@@ -1,6 +1,5 @@
 import NotesComponent from "../components/notes.jsx";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import noteService from "./services/notes";
 
 const App = () => {
@@ -12,7 +11,7 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   useEffect(() => {
-    noteService.getAll().then((response) => {
+    noteService.getAll("notes").then((response) => {
       setNotes(response.data);
     });
   }, []);
@@ -22,7 +21,7 @@ const App = () => {
     const changedNote = { ...note, important: !note.important };
 
     noteService
-      .update(id, changedNote)
+      .update("notes", id, changedNote)
       .then((returnedNote) => {
         setNotes(notes.map((note) => (note.id === id ? returnedNote : note)));
       })
@@ -40,7 +39,7 @@ const App = () => {
       id: notes.length + 1,
     };
 
-    noteService.create(noteObject).then((returnedNote) => {
+    noteService.create("notes", noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote));
       setNewNote("");
     });
