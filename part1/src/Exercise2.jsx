@@ -28,7 +28,36 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     if (checkDuplicate(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const existingPerson = persons.find((p) => p.name === newName);
+      if (!existingPerson) return; // defensive
+
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook. Replace the old number with the new one?`,
+        )
+      ) {
+        const changedPerson = { ...existingPerson, number: newNumber };
+
+        personServices
+          .update("persons", existingPerson.id, changedPerson)
+          .then((response) => {
+            // update local state with server response
+            setPersons(
+              persons.map((p) =>
+                p.id !== existingPerson.id ? p : response.data,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => {
+            console.error("Failed to update person:", error);
+            alert(
+              `The information of ${newName} has already been removed from server`,
+            );
+            setPersons(persons.filter((p) => p.id !== existingPerson.id));
+          });
+      }
       return;
     }
 
@@ -38,6 +67,7 @@ const App = () => {
       id: persons.length + 1,
     };
     personServices.create("persons", nameObject).then((returnedObject) => {
+      // Use the server's returned object to keep IDs consistent
       setPersons(persons.concat(returnedObject.data));
       setNewName("");
       setNewNumber("");
