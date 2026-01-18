@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const app = express();
 
@@ -13,6 +14,28 @@ app.get("/", (request, response) => {
 
 app.get("/api/notes", (request, response) => {
   response.json(notes);
+});
+
+app.get("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  console.log("requested id (as number):", id);
+
+  const note = notes.find((note) => note.id === id);
+  if (!note) {
+    console.log(`note with id ${id} not found`);
+    response.statusMessage = "note not found";
+    return response.status(404).json({ error: "note not found" });
+  }
+
+  console.log("found note:", JSON.stringify(note));
+  response.json(note);
+});
+
+app.delete("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  notes = notes.filter((note) => note.id !== id);
+
+  response.status(204).end();
 });
 
 const PORT = 3001;
