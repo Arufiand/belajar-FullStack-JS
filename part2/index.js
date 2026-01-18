@@ -40,13 +40,25 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
-app.post("/api/notes", (request, response) => {
+const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  const note = request.body;
-  note.id = maxId + 1;
+  return maxId + 1;
+};
+
+app.post("/api/notes", (request, response) => {
+  const body = request.body;
+  if (!body.content) {
+    return response.status(400).json({ error: "content missing" });
+  }
+
+  const note = {
+    id: generateId(),
+    title: body.content,
+    importance: body.importance || false,
+  };
   notes = notes.concat(note);
-  console.log("new note:", JSON.stringify(note));
-  response.json(note);
+
+  response.status(201).json(note);
 });
 
 const PORT = 3001;
