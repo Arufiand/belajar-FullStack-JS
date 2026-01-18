@@ -12,22 +12,22 @@ let notes = [
 
 let phonebook = [
   {
-    id: "1",
+    id: 1,
     name: "Arto Hellas",
     number: "040-123456",
   },
   {
-    id: "2",
+    id: 2,
     name: "Ada Lovelace",
     number: "39-44-5323523",
   },
   {
-    id: "3",
+    id: 3,
     name: "Dan Abramov",
     number: "12-43-234345",
   },
   {
-    id: "4",
+    id: 4,
     name: "Mary Poppendieck",
     number: "39-23-6423122",
   },
@@ -64,8 +64,11 @@ app.delete("/api/notes/:id", (request, response) => {
 });
 
 const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
+  // generate an id that is unique across notes and phonebook
+  const maxNoteId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
+  const maxPersonId =
+    phonebook.length > 0 ? Math.max(...phonebook.map((p) => p.id)) : 0;
+  return Math.max(maxNoteId, maxPersonId) + 1;
 };
 
 app.post("/api/notes", (request, response) => {
@@ -129,6 +132,14 @@ app.put("/api/persons/:id", (request, response) => {
   response.json(person);
 });
 
+app.get("/api/info", (request, response) => {
+  // number of people in phonebook
+  const names = phonebook.length;
+  console.log("names:", names);
+  const messages = "Phonebook has info for " + names + " people";
+  const date = new Date();
+  response.send(messages + "<br>" + date);
+});
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
