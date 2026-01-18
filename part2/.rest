@@ -1,17 +1,73 @@
+# Root
+GET http://localhost:3001/
+
+###
+
+# Notes - list all
 GET http://localhost:3001/api/notes
 
 ###
 
-# GET a single note by id (replace :id with an actual number, e.g. 1)
+# Notes - get single (replace 1 with desired id)
 GET http://localhost:3001/api/notes/1
 
 ###
 
-# POST a new note
+# Notes - create (server expects { content, importance })
 POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "Khuntul",
-  "important": true
+  "content": "This is a new note from .rest",
+  "importance": true
 }
+
+###
+
+# Notes - delete (replace 1 with desired id)
+DELETE http://localhost:3001/api/notes/1
+
+###
+
+# Persons (phonebook) - list all
+GET http://localhost:3001/api/persons
+
+###
+
+# Persons - get single (replace 1 with desired id)
+GET http://localhost:3001/api/persons/1
+
+###
+
+# Persons - create (server expects { name, number })
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "New Person",
+  "number": "123-456-789"
+}
+
+###
+
+# Persons - delete (replace 1 with desired id)
+DELETE http://localhost:3001/api/persons/1
+
+###
+
+# Persons - update (replace 2 with desired id)
+PUT http://localhost:3001/api/persons/2
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace Updated",
+  "number": "39-44-999999"
+}
+
+###
+
+# Notes
+# Tips:
+# - Start the server first: cd part2 && npm run dev (or NODE_ENV=development node index.js)
+# - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
+# - Ensure there is a blank line between headers and JSON body in POST/PUT requests.
