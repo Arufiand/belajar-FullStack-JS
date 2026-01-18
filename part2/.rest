@@ -1,1 +1,17 @@
 GET http://localhost:3001/api/notes
+
+###
+
+# GET a single note by id (replace :id with an actual number, e.g. 1)
+GET http://localhost:3001/api/notes/1
+
+###
+
+# POST a new note
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "This is a new note",
+  "important": true
+}
