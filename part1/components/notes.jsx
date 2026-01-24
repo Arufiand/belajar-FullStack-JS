@@ -1,9 +1,8 @@
 const NotesComponent = ({ note, toggleImportance }) => {
   const label = note.important ? "make not important" : "make important";
-
   return (
-    <li className="note">
-      {note.content}
+    <li className="note" key={node.id}>
+      {note.title}
       <button onClick={toggleImportance}>{label}</button>
     </li>
   );

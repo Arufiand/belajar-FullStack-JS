@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://192.168.18.150:3001/";
+const baseUrl = "http://localhost:3001/api/";
 
 const url = (path) => {
   return `${baseUrl}${path}`;

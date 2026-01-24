@@ -2,10 +2,11 @@
 const express = require("express");
 const { RequestLogger, unknownEndpoint } = require("./request_logger");
 const app = express();
+const cors = require("cors");
 
+app.use(cors());
 app.use(express.json());
 app.use(RequestLogger);
-app.use(unknownEndpoint);
 
 let notes = [
   { id: 1, title: "First note", importance: true },
@@ -148,6 +149,9 @@ app.get("/api/info", (request, response) => {
   const date = new Date();
   response.send(messages + "<br>" + date);
 });
+
+app.use(unknownEndpoint);
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
