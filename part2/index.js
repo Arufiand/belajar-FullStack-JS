@@ -1,8 +1,11 @@
 "use strict";
 const express = require("express");
+const { RequestLogger, unknownEndpoint } = require("./request_logger");
 const app = express();
 
 app.use(express.json());
+app.use(RequestLogger);
+app.use(unknownEndpoint);
 
 let notes = [
   { id: 1, title: "First note", importance: true },
