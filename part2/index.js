@@ -105,6 +105,11 @@ app.post("/api/persons", (request, response) => {
   if (!body.name || !body.number) {
     return response.status(400).json({ error: "name and number required" });
   }
+  if (phonebook.find((p) => p.name === body.name || p.number === body.number))
+    return response
+      .status(400)
+      .json({ error: "name and / or number must be unique" });
+
   const person = {
     id: generateId(),
     name: body.name,
