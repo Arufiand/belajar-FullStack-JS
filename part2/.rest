@@ -25,7 +25,7 @@ Content-Type: application/json
 ###
 
 # Notes - delete (replace 1 with desired id)
-DELETE http://localhost:3001/api/notes/1
+DELETE http://localhost:3001/api/notes/69762562f326dc28468b88ee
 
 ###
 

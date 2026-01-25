@@ -59,11 +59,17 @@ app.get("/api/notes/:id", async (request, response, next) => {
   }
 });
 
-app.delete("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
-
-  response.status(204).end();
+app.delete("/api/notes/:id", async (request, response, next) => {
+  try {
+    const deleted = await Note.findByIdAndDelete(request.params.id);
+    if (!deleted) {
+      response.statusMessage = "note not found";
+      return response.status(404).json({ error: "note not found" });
+    }
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.post("/api/notes", async (request, response) => {
