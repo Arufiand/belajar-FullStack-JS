@@ -9,7 +9,7 @@ GET http://localhost:3001/api/notes
 ###
 
 # Notes - get single (replace 1 with desired id)
-GET http://localhost:3001/api/notes/1
+GET http://localhost:3001/api/notes/69762562f326dc28468b88ee
 
 ###
 

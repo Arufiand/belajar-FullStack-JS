@@ -18,10 +18,10 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
+  content: { type: String, required: true },
+  importance: { type: Boolean, default: false }, // ensure importance is stored
+  date: { type: Date, default: Date.now },
 });
-
 noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();

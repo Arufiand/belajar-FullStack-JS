@@ -9,12 +9,7 @@ app.use(express.json());
 app.use(RequestLogger);
 
 const Note = require("./models/notes");
-
-let notes = [
-  { id: 1, title: "First note", importance: true },
-  { id: 2, title: "Second note", importance: false },
-  { id: 3, title: "Third note", importance: true },
-];
+const { generateId } = require("./helper/general_helper");
 
 let phonebook = [
   {
@@ -49,19 +44,19 @@ app.get("/api/notes", (request, response) => {
   });
 });
 
-app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  console.log("requested id (as number):", id);
-
-  const note = notes.find((note) => note.id === id);
-  if (!note) {
-    console.log(`note with id ${id} not found`);
-    response.statusMessage = "note not found";
-    return response.status(404).json({ error: "note not found" });
+// javascript
+app.get("/api/notes/:id", async (request, response, next) => {
+  try {
+    const note = await Note.findById(request.params.id);
+    if (!note) {
+      response.statusMessage = "note not found";
+      return response.status(404).json({ error: "note not found" });
+    }
+    console.log("found note:", JSON.stringify(note));
+    response.json(note);
+  } catch (error) {
+    next(error);
   }
-
-  console.log("found note:", JSON.stringify(note));
-  response.json(note);
 });
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -71,28 +66,23 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
-const generateId = () => {
-  // generate an id that is unique across notes and phonebook
-  const maxNoteId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  const maxPersonId =
-    phonebook.length > 0 ? Math.max(...phonebook.map((p) => p.id)) : 0;
-  return Math.max(maxNoteId, maxPersonId) + 1;
-};
-
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", async (request, response) => {
   const body = request.body;
-  if (!body.content) {
+  if (!body || !body.content) {
     return response.status(400).json({ error: "content missing" });
   }
 
-  const note = {
-    id: generateId(),
-    title: body.content,
-    importance: body.importance || false,
-  };
-  notes = notes.concat(note);
+  const note = new Note({
+    content: body.content,
+    importance: body.importance === undefined ? false : body.importance,
+  });
 
-  response.status(201).json(note);
+  try {
+    const savedNote = await note.save();
+    response.status(201).json(savedNote); // set status before json
+  } catch (error) {
+    response.status(400).json({ error: "error creating new note" });
+  }
 });
 
 app.get("/api/persons", (request, response) => {
