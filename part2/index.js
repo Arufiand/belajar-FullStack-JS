@@ -3,36 +3,12 @@ const express = require("express");
 const { RequestLogger, unknownEndpoint } = require("./request_logger");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
 
 app.use(cors());
 app.use(express.json());
 app.use(RequestLogger);
 
-const [, , password, dbArg, nameArg, numberArg] = process.argv;
-
-const dbIndex = Number(dbArg);
-const dbSelected = dbIndex === 1 ? "notes" : "phoneBook";
-
-const url = `mongodb+srv://fullstack_mongo_db:${password}@cluster0.wr65zlp.mongodb.net/${dbSelected}?retryWrites=true&w=majority&appName=Cluster0`;
-
-mongoose.set("strictQuery", false);
-mongoose.connect(url, { family: 4 });
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
+const Note = require("./models/notes");
 
 let notes = [
   { id: 1, title: "First note", importance: true },
