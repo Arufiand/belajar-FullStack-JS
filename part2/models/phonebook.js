@@ -1,20 +1,32 @@
-let phonebook = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+require("dotenv").config();
+const mongoose = require("mongoose");
+const { joinUrl } = require("../helper/general_helper");
 
-module.exports = phonebook;
+mongoose.set("strictQuery", false);
+
+const url = joinUrl(process.env.MONGOURL, process.env.PHONEBOOK_DB);
+
+console.log("connecting to", url);
+mongoose
+  .connect(url, { family: 4 })
+  .then((result) => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connecting to MongoDB:", error.message);
+  });
+
+const phoneBookSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  number: { type: String, required: true },
+});
+
+phoneBookSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+module.exports = mongoose.model("Phonebook", phoneBookSchema);
