@@ -64,8 +64,8 @@ Content-Type: application/json
   "number": "39-44-999999"
 }
 
-###
-GET http://localhost:3001/api/persons/info
+### KONTOLINFO
+GET http://localhost:3001/api/info
 
 
 ###
