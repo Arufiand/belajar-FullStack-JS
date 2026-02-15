@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name=" | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" nameIsGenerated="true" path="$PROJECT_DIR$/part2/.rest" executionIdentifier="#3" index="3" runType="Run single request">
+    <method v="2" />
+  </configuration>
+</component>
