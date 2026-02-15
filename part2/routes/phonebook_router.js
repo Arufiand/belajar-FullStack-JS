@@ -1,55 +1,90 @@
 "use strict";
 const express = require("express");
-const phonebook = require("../models/phonebook");
+const Persons = require("../models/phonebook");
 const phonebookRouter = express.Router();
 
 phonebookRouter.get("/", (request, response) => {
-  response.json(phonebook);
+  Persons.find({}).then((persons) => response.json(persons));
 });
 
-phonebookRouter.get("/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = phonebook.find((person) => person.id === id);
-  if (!person) {
-    return response.status(404).json({ error: "person not found" });
+phonebookRouter.get("/:id", async (request, response, next) => {
+  try {
+    const person = await Persons.findById(request.params.id);
+    if (!person) {
+      response.statusMessage = "person not found";
+      return response.status(404).json({ error: "person not found" });
+    }
+    response.json(person);
+  } catch (error) {
+    next(error);
   }
-  response.json(person);
 });
 
-phonebookRouter.post("/", (request, response) => {
+phonebookRouter.delete("/:id", async (request, response) => {
+  try {
+    const deleted = await Persons.findByIdAndDelete(request.params.id);
+    if (!deleted) {
+      response.statusMessage = "person not found";
+      return response.status(404).json({ error: "person not found" });
+    }
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
+phonebookRouter.post("/", async (request, response, next) => {
   const body = request.body;
   if (!body.name || !body.number) {
     return response.status(400).json({ error: "name and number required" });
   }
-  if (phonebook.find((p) => p.name === body.name || p.number === body.number))
-    return response
-      .status(400)
-      .json({ error: "name and / or number must be unique" });
 
-  const person = {
+  try {
+    const existing = await Persons.findOne({
+      $or: [{ name: body.name }, { number: body.number }],
+    });
+
+    if (existing) {
+      return response
+        .status(400)
+        .json({ error: "name and / or number must be unique" });
+    }
+
+    const person = new Persons({
+      name: body.name,
+      number: body.number,
+    });
+
+    const savedPerson = await person.save();
+    return response.status(201).json(savedPerson);
+  } catch (error) {
+    next(error);
+  }
+});
+
+phonebookRouter.put("/:id", async (request, response, next) => {
+  const body = request.body;
+  const update = {
     name: body.name,
     number: body.number,
   };
-  phonebook = phonebook.concat(person);
-  response.status(201).json(person);
-});
 
-phonebookRouter.delete("/:id", (request, response) => {
-  const id = Number(request.params.id);
-  phonebook = phonebook.filter((person) => person.id !== id);
-  response.status(204).end();
-});
+  try {
+    const updated = await Persons.findByIdAndUpdate(request.params.id, update, {
+      new: true,
+      runValidators: true,
+      context: "query",
+    });
 
-phonebookRouter.put("/:id", (request, response) => {
-  const body = request.body;
-  const id = Number(request.params.id);
-  const person = phonebook.find((person) => person.id === id);
-  if (!person) {
-    return response.status(404).json({ error: "person not found" });
+    if (!updated) {
+      response.statusMessage = "person not found";
+      return response.status(404).json({ error: "person not found" });
+    }
+
+    response.json(updated);
+  } catch (error) {
+    next(error);
   }
-  person.name = body.name || person.name;
-  person.number = body.number || person.number;
-  response.json(person);
 });
 
 module.exports = phonebookRouter;

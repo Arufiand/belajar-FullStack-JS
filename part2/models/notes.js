@@ -6,16 +6,41 @@ mongoose.set("strictQuery", false);
 
 const url = joinUrl(process.env.MONGOURL, process.env.NOTES_DB);
 
-console.log("connecting to", url);
-mongoose
-  .connect(url, { family: 4 })
+const connectIfNeeded = async (retries = 2, delay = 1500) => {
+  if (mongoose.connection.readyState !== 0) {
+    console.log(
+      "reusing existing mongoose connection (state):",
+      mongoose.connection.readyState,
+    );
+    return;
+  }
 
-  .then((result) => {
+  if (!url) {
+    console.error("Missing Mongo URL env var (MONGOURL or MONGODB_URI)");
+    return;
+  }
+
+  console.log("attempting to connect to MongoDB:", url);
+  try {
+    await mongoose.connect(url, {
+      family: 4,
+      serverSelectionTimeoutMS: 5000, // fail fast for clearer errors
+    });
     console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
+  } catch (err) {
+    console.error(
+      "error connecting to MongoDB:",
+      err && err.message ? err.message : err,
+    );
+    if (retries > 0) {
+      console.log(`retrying in ${delay}ms (${retries} retries left)`);
+      await new Promise((res) => setTimeout(res, delay));
+      return connectIfNeeded(retries - 1, delay * 2);
+    }
+  }
+};
+
+connectIfNeeded();
 
 const noteSchema = new mongoose.Schema({
   content: { type: String, required: true },
