@@ -1,10 +1,7 @@
-require('dotenv').config();
 const mongoose = require('mongoose');
-const { joinUrl } = require('../helper/general_helper');
+const { connectIfNeeded } = require('../utils/config');
 
 mongoose.set('strictQuery', false);
-
-const url = joinUrl(process.env.MONGOURL, process.env.PHONEBOOK_DB);
 
 const numberFormatValidator = function (value) {
   if (!value) return false;
@@ -15,29 +12,10 @@ const numberFormatValidator = function (value) {
 
   const [first, second] = parts;
   if (!/^\d{2,3}$/.test(first)) return false;
-  if (!/^\d+$/.test(second)) return false;
-
-  return true;
+  return /^\d+$/.test(second);
 };
 
-const connectIfNeeded = async () => {
-  if (mongoose.connection.readyState === 0) {
-    console.log('connecting to', url);
-    try {
-      await mongoose.connect(url, { family: 4 });
-      console.log('connected to MongoDB');
-    } catch (error) {
-      console.log('error connecting to MongoDB:', error.message);
-    }
-  } else {
-    console.log(
-      'reusing existing mongoose connection (state):',
-      mongoose.connection.readyState,
-    );
-  }
-};
-
-connectIfNeeded();
+connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
 
 const phoneBookSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 3 },
@@ -46,9 +24,9 @@ const phoneBookSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: numberFormatValidator,
-      message: (props) => `${props.value} is not in the correct format`,
-    },
-  },
+      message: props => `${props.value} is not in the correct format`
+    }
+  }
 });
 
 phoneBookSchema.set('toJSON', {
@@ -56,7 +34,7 @@ phoneBookSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-  },
+  }
 });
 
 module.exports = mongoose.model('Phonebook', phoneBookSchema);
