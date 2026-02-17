@@ -43,7 +43,7 @@ const connectIfNeeded = async (retries = 2, delay = 1500) => {
 connectIfNeeded();
 
 const noteSchema = new mongoose.Schema({
-  content: { type: String, required: true },
+  content: { type: String, required: true, minlength: 5 },
   importance: { type: Boolean, default: false }, // ensure importance is stored
   date: { type: Date, default: Date.now },
 });

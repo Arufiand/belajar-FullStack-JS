@@ -16,7 +16,7 @@ notesRouter.get("/:id", async (request, response, next) => {
     const note = await Note.findById(request.params.id);
     if (!note) {
       response.statusMessage = "note not found";
-      return response.status(404).json({ error: "note not found" });
+      return response.status(404).json({ error: "note not found" }).end();
     }
     response.json(note);
   } catch (error) {
