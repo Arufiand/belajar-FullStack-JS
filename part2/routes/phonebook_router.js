@@ -34,14 +34,14 @@ phonebookRouter.delete("/:id", async (request, response) => {
 });
 
 phonebookRouter.post("/", async (request, response, next) => {
-  const body = request.body;
-  if (!body.name || !body.number) {
+  const { name, number } = request.body;
+  if (!name || !number) {
     return response.status(400).json({ error: "name and number required" });
   }
 
   try {
     const existing = await Persons.findOne({
-      $or: [{ name: body.name }, { number: body.number }],
+      $or: [{ name }, { number }],
     });
 
     if (existing) {
@@ -51,8 +51,8 @@ phonebookRouter.post("/", async (request, response, next) => {
     }
 
     const person = new Persons({
-      name: body.name,
-      number: body.number,
+      name,
+      number,
     });
 
     const savedPerson = await person.save();

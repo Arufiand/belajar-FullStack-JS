@@ -4,7 +4,7 @@ import noteService from "./services/axios.js";
 import Notification from "../components/notification";
 import Footer from "../components/footer.jsx";
 
-const App = () => {
+const NoteApp = () => {
   const [notes, setNotes] = useState([]);
 
   const [newNote, setNewNote] = useState("a new note...");
@@ -27,7 +27,7 @@ const App = () => {
       .then((returnedNote) => {
         setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorMessage(
           `Note '${note.content}' was already removed from server`,
         );
@@ -84,4 +84,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default NoteApp;

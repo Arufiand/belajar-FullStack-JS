@@ -6,6 +6,20 @@ mongoose.set("strictQuery", false);
 
 const url = joinUrl(process.env.MONGOURL, process.env.PHONEBOOK_DB);
 
+const numberFormatValidator = function (value) {
+  if (!value) return false;
+  if (value.length < 8) return false;
+
+  const parts = value.split("-");
+  if (parts.length !== 2) return false;
+
+  const [first, second] = parts;
+  if (!/^\d{2,3}$/.test(first)) return false;
+  if (!/^\d+$/.test(second)) return false;
+
+  return true;
+};
+
 const connectIfNeeded = async () => {
   if (mongoose.connection.readyState === 0) {
     console.log("connecting to", url);
@@ -26,8 +40,15 @@ const connectIfNeeded = async () => {
 connectIfNeeded();
 
 const phoneBookSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  number: { type: String, required: true },
+  name: { type: String, required: true, minlength: 3 },
+  number: {
+    type: String,
+    required: true,
+    validate: {
+      validator: numberFormatValidator,
+      message: (props) => `${props.value} is not in the correct format`,
+    },
+  },
 });
 
 phoneBookSchema.set("toJSON", {

@@ -4,12 +4,14 @@ import PersonForm from "../components/personform.component.jsx";
 import Persons from "../components/persons.component.jsx";
 
 import personServices from "./services/axios.js";
+import Notification from "../components/notification.jsx";
 
-const App = () => {
+const PersonApp = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personServices.getAll("persons").then((response) => {
@@ -66,12 +68,21 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-    personServices.create("persons", nameObject).then((returnedObject) => {
-      // Use the server's returned object to keep IDs consistent
-      setPersons(persons.concat(returnedObject.data));
-      setNewName("");
-      setNewNumber("");
-    });
+    personServices
+      .create("persons", nameObject)
+      .then((returnedObject) => {
+        // Use the server's returned object to keep IDs consistent
+        setPersons(persons.concat(returnedObject.data));
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        console.error("Failed to create person:", error);
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
   };
 
   const handleNumberChange = (event) => {
@@ -109,7 +120,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification message={errorMessage} />
       <FilterComponent
         filter={filter}
         handleFilterChange={handleFilterChange}
@@ -134,4 +145,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default PersonApp;
