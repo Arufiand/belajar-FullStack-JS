@@ -1,12 +1,13 @@
 'use strict';
 const express = require('express');
-const { RequestLogger, unknownEndpoint } = require('./utils/request_logger');
+const { RequestLogger } = require('./utils/request_logger');
 
 const app = express();
 const cors = require('cors');
 const notesRouter = require('./routes/note_router');
 const phonebookRouter = require('./routes/phonebook_router');
 const phonebookInfoRouter = require('./routes/phonebook_info_router');
+const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 
 app.use(cors());
 app.use(express.json());
