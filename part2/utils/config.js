@@ -2,6 +2,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { joinUrl } = require('../helper/general_helper');
+const logger = require('./logger');
 
 mongoose.set('strictQuery', false);
 
@@ -21,22 +22,22 @@ const connectIfNeeded = async (options = {}) => {
   const mongoUrl = url || buildUrl(dbEnvName);
 
   if (!mongoUrl) {
-    console.error(
+    logger.error(
       'Missing Mongo URL env var (MONGODB_URI or MONGOURL) or dbEnvName'
     );
     return;
   }
 
   if (_connecting) {
-    console.log('waiting for in-progress MongoDB connection...');
+    logger.info('waiting for in-progress MongoDB connection...');
     try {
       await _connecting;
     } catch (e) {
-      console.error('error connecting to MongoDB:', e);
+      logger.error('error connecting to MongoDB:', e);
     }
     if (mongoose.connection.readyState !== 0) {
       if (_connectedUrl && _connectedUrl !== mongoUrl) {
-        console.warn(
+        logger.warn(
           'Existing mongoose connection uses a different URL than requested. Connection not re-established.'
         );
       }
@@ -46,12 +47,12 @@ const connectIfNeeded = async (options = {}) => {
 
   if (mongoose.connection.readyState !== 0) {
     if (_connectedUrl && _connectedUrl !== mongoUrl) {
-      console.warn(
+      logger.warn(
         'reusing existing mongoose connection to a different URL; requested:',
         mongoUrl
       );
     } else {
-      console.log(
+      logger.info(
         'reusing existing mongoose connection (state):',
         mongoose.connection.readyState
       );
@@ -59,7 +60,7 @@ const connectIfNeeded = async (options = {}) => {
     return;
   }
 
-  console.log('attempting to connect to MongoDB:', mongoUrl);
+  logger.info('attempting to connect to MongoDB:', mongoUrl);
 
   try {
     _connecting = mongoose.connect(mongoUrl, {
@@ -68,16 +69,16 @@ const connectIfNeeded = async (options = {}) => {
     });
     await _connecting;
     _connectedUrl = mongoUrl;
-    console.log('connected to MongoDB');
+    logger.info('connected to MongoDB');
     _connecting = null;
   } catch (err) {
     _connecting = null;
-    console.error(
+    logger.error(
       'error connecting to MongoDB:',
       err && err.message ? err.message : err
     );
     if (retries > 0) {
-      console.log(`retrying in ${delay}ms (${retries} retries left)`);
+      logger.info(`retrying in ${delay}ms (${retries} retries left)`);
       await new Promise(res => setTimeout(res, delay));
       return connectIfNeeded({
         url: mongoUrl,

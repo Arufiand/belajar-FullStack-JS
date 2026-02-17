@@ -8,6 +8,7 @@ const notesRouter = require('./routes/note_router');
 const phonebookRouter = require('./routes/phonebook_router');
 const phonebookInfoRouter = require('./routes/phonebook_info_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
+const logger = require('./utils/logger');
 
 app.use(cors());
 app.use(express.json());
@@ -25,5 +26,5 @@ app.get('/', (request, response) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });
