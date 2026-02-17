@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node --watch index.js",
     "dev": "node --watch --inspect index.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,6 +22,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.0.0"
+    "@stylistic/eslint-plugin": "^5.8.0",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0"
   }
 }
