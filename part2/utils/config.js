@@ -9,11 +9,37 @@ mongoose.set('strictQuery', false);
 let _connecting = null;
 let _connectedUrl = null;
 
+const PORT = process.env.PORT;
+const MONGO_URL = process.env.MONGOURL;
+const PHONEBOOK_DB = process.env.PHONEBOOK_DB;
+const NOTES_DB = process.env.NOTES_DB;
+
 const buildUrl = dbEnvName => {
-  const full = process.env.MONGODB_URI || process.env.MONGOURL;
-  if (!full && !dbEnvName) return null;
+  // prefer MONGODB_URI if set, then MONGOURL
+  const full = process.env.MONGODB_URI || MONGO_URL;
+
+  // If there's no base URL configured
+  if (!full) {
+    if (!dbEnvName) return null;
+    // If caller passed a full connection string directly as dbEnvName, accept it
+    if (/^mongodb(\+srv)?:\/\//.test(dbEnvName)) return dbEnvName;
+    // If caller passed an env var name whose value is a full connection string, use it
+    if (
+      process.env[dbEnvName] &&
+      /^mongodb(\+srv)?:\/\//.test(process.env[dbEnvName])
+    ) {
+      return process.env[dbEnvName];
+    }
+    // Otherwise we can't build a connection string without a base URL
+    return null;
+  }
+
   if (!dbEnvName) return full;
-  return joinUrl(full, process.env[dbEnvName]);
+
+  // dbEnvName may be either an env var key (e.g. 'PHONEBOOK_DB') or the actual DB name
+  const dbCandidate =
+    process.env[dbEnvName] !== undefined ? process.env[dbEnvName] : dbEnvName;
+  return joinUrl(full, dbCandidate);
 };
 
 const connectIfNeeded = async (options = {}) => {
@@ -92,5 +118,8 @@ const connectIfNeeded = async (options = {}) => {
 
 module.exports = {
   connectIfNeeded,
-  buildUrl
+  buildUrl,
+  PORT,
+  PHONEBOOK_DB,
+  NOTES_DB
 };

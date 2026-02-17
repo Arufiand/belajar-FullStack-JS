@@ -16,6 +16,7 @@ noteSchema.set('toJSON', {
   }
 });
 
+// ensure we have a connection: pass the env var key so buildUrl can lookup the DB name
 connectIfNeeded({ dbEnvName: 'NOTES_DB' });
 
 module.exports = mongoose.model('Note', noteSchema);

@@ -15,6 +15,7 @@ const numberFormatValidator = function (value) {
   return /^\d+$/.test(second);
 };
 
+// ensure we have a connection: pass the env var key so buildUrl can lookup the DB name
 connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
 
 const phoneBookSchema = new mongoose.Schema({

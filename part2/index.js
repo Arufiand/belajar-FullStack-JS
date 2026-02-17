@@ -9,6 +9,7 @@ const phonebookRouter = require('./routes/phonebook_router');
 const phonebookInfoRouter = require('./routes/phonebook_info_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 const logger = require('./utils/logger');
+const { PORT, connectIfNeeded } = require('./utils/config');
 
 app.use(cors());
 app.use(express.json());
@@ -24,7 +25,23 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
-});
+// Start the server only after establishing a MongoDB connection
+const start = async () => {
+  try {
+    // attempt to connect using the PHONEBOOK_DB env var if present;
+    // if you use NOTES routes as a separate app, adjust accordingly
+    await connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
+
+    app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    logger.error(
+      'Failed to start server due to DB connection error:',
+      err && err.message ? err.message : err
+    );
+    process.exit(1);
+  }
+};
+
+start();
