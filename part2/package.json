@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --watch index.js",
     "dev": "node --watch --inspect index.js",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

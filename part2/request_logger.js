@@ -1,42 +1,42 @@
 const RequestLogger = (req, res, next) => {
-  const start = process.hrtime();
+  const start = process.hrtime()
 
-  res.on("finish", () => {
-    const diff = process.hrtime(start);
-    const ms = diff[0] * 1e3 + diff[1] / 1e6; // milliseconds with sub-ms precision
-    console.log("Method", req.method);
-    console.log("Path", req.path);
-    console.log("Body", req.body);
-    console.log("Url", req.url);
-    console.log("Status code", res.statusCode);
-    console.log("Response Time", ms.toFixed(3) + " ms");
+  res.on('finish', () => {
+    const diff = process.hrtime(start)
+    const ms = diff[0] * 1e3 + diff[1] / 1e6 // milliseconds with sub-ms precision
+    console.log('Method', req.method)
+    console.log('Path', req.path)
+    console.log('Body', req.body)
+    console.log('Url', req.url)
+    console.log('Status code', res.statusCode)
+    console.log('Response Time', ms.toFixed(3) + ' ms')
 
-    const hdr = res.getHeader && res.getHeader("X-Response-Time");
+    const hdr = res.getHeader && res.getHeader('X-Response-Time')
     if (hdr) {
-      console.log("X-Response-Time header:", hdr);
+      console.log('X-Response-Time header:', hdr)
     }
-    console.log("---");
-  });
+    console.log('---')
+  })
 
-  next();
-};
+  next()
+}
 
 // METHOD, PATH, BODY, URL
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.message)
 
-  if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id cok" });
-  } else if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id cok' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
-  next(error);
-};
+  next(error)
+}
 
-module.exports = { RequestLogger, unknownEndpoint, errorHandler };
+module.exports = { RequestLogger, unknownEndpoint, errorHandler }
