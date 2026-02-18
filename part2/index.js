@@ -4,9 +4,9 @@ const { RequestLogger } = require('./utils/request_logger');
 
 const app = express();
 const cors = require('cors');
-const notesRouter = require('./routes/note_router');
-const phonebookRouter = require('./routes/phonebook_router');
-const phonebookInfoRouter = require('./routes/phonebook_info_router');
+const notesRouter = require('./controllers/note_router');
+const phonebookRouter = require('./controllers/phonebook_router');
+const phonebookInfoRouter = require('./controllers/phonebook_info_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 const logger = require('./utils/logger');
 const { PORT, connectIfNeeded } = require('./utils/config');
@@ -29,7 +29,7 @@ app.get('/', (request, response) => {
 const start = async () => {
   try {
     // attempt to connect using the PHONEBOOK_DB env var if present;
-    // if you use NOTES routes as a separate app, adjust accordingly
+    // if you use NOTES controllers as a separate app, adjust accordingly
     await connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
 
     app.listen(PORT, () => {
