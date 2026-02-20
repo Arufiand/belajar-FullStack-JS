@@ -7,6 +7,7 @@ const cors = require('cors');
 const notesRouter = require('./controllers/note_router');
 const phonebookRouter = require('./controllers/phonebook_router');
 const phonebookInfoRouter = require('./controllers/phonebook_info_router');
+const blogRouter = require('./controllers/blog_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 const logger = require('./utils/logger');
 const { PORT, connectIfNeeded } = require('./utils/config');
@@ -17,6 +18,7 @@ app.use(RequestLogger);
 app.use('/api/notes', notesRouter);
 app.use('/api/persons', phonebookRouter);
 app.use('/api/info', phonebookInfoRouter);
+app.use('/api/blogs', blogRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
@@ -30,7 +32,7 @@ const start = async () => {
   try {
     // attempt to connect using the PHONEBOOK_DB env var if present;
     // if you use NOTES controllers as a separate app, adjust accordingly
-    await connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
+    // await connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
 
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
