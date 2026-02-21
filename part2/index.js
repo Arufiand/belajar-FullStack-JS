@@ -30,12 +30,10 @@ app.get('/', (request, response) => {
 // Start the server only after establishing a MongoDB connection
 const start = async () => {
   try {
-    // attempt to connect using the PHONEBOOK_DB env var if present;
-    // if you use NOTES controllers as a separate app, adjust accordingly
-    // await connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
-
-    app.listen(PORT, () => {
-      logger.info(`Server running on port ${PORT}`);
+    await connectIfNeeded({ dbEnvName: 'FULLSTACKDB' }).then(() => {
+      app.listen(PORT, () => {
+        logger.info(`Server running on port ${PORT}`);
+      });
     });
   } catch (err) {
     logger.error(

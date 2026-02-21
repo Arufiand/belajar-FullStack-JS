@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { connectIfNeeded } = require('../utils/config');
 
 mongoose.set('strictQuery', false);
 
@@ -17,7 +16,5 @@ blogSchema.set('toJSON', {
     delete returnedObject.__v;
   }
 });
-
-connectIfNeeded({ dbEnvName: 'BLOG_DB' });
 
 module.exports = mongoose.model('Blog', blogSchema);

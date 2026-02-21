@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { connectIfNeeded } = require('../utils/config');
 
 mongoose.set('strictQuery', false);
 
@@ -14,9 +13,6 @@ const numberFormatValidator = function (value) {
   if (!/^\d{2,3}$/.test(first)) return false;
   return /^\d+$/.test(second);
 };
-
-// ensure we have a connection: pass the env var key so buildUrl can lookup the DB name
-connectIfNeeded({ dbEnvName: 'PHONEBOOK_DB' });
 
 const phoneBookSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 3 },

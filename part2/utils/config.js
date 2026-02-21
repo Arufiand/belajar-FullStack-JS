@@ -11,8 +11,7 @@ let _connectedUrl = null;
 
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGOURL;
-const PHONEBOOK_DB = process.env.PHONEBOOK_DB;
-const NOTES_DB = process.env.NOTES_DB;
+const FullStackDB = process.env.FullStackDB;
 
 const buildUrl = dbEnvName => {
   // prefer MONGODB_URI if set, then MONGOURL
@@ -120,6 +119,5 @@ module.exports = {
   connectIfNeeded,
   buildUrl,
   PORT,
-  PHONEBOOK_DB,
-  NOTES_DB
+  FullStackDB
 };

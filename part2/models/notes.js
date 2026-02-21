@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { connectIfNeeded } = require('../utils/config');
 
 mongoose.set('strictQuery', false);
 
@@ -15,8 +14,5 @@ noteSchema.set('toJSON', {
     delete returnedObject.__v;
   }
 });
-
-// ensure we have a connection: pass the env var key so buildUrl can lookup the DB name
-connectIfNeeded({ dbEnvName: 'NOTES_DB' });
 
 module.exports = mongoose.model('Note', noteSchema);
