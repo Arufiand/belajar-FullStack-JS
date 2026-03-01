@@ -72,6 +72,6 @@ GET http://localhost:3001/api/info
 
 # Notes
 # Tips:
-# - Start the server first: cd part2 && npm run dev (or NODE_ENV=development node index.js)
+# - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
 # - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
 # - Ensure there is a blank line between headers and JSON body in POST/PUT requests.
