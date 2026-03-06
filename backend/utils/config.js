@@ -11,17 +11,21 @@ let _connectedUrl = null;
 
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGOURL;
-const FullStackDB = process.env.FullStackDB;
+
+// Default env var key to use for DB selection depending on NODE_ENV
+const DEFAULT_DB_ENV_KEY =
+  process.env.NODE_ENV === 'test' ? 'FULLSTACKDBTEST' : 'FULLSTACKDB';
 
 const buildUrl = dbEnvName => {
   // prefer MONGODB_URI if set, then MONGOURL
   const full = process.env.MONGODB_URI || MONGO_URL;
 
+  // If caller passed a full connection string directly as dbEnvName, accept it
+  if (dbEnvName && /^mongodb(\+srv)?:\/\//.test(dbEnvName)) return dbEnvName;
+
   // If there's no base URL configured
   if (!full) {
     if (!dbEnvName) return null;
-    // If caller passed a full connection string directly as dbEnvName, accept it
-    if (/^mongodb(\+srv)?:\/\//.test(dbEnvName)) return dbEnvName;
     // If caller passed an env var name whose value is a full connection string, use it
     if (
       process.env[dbEnvName] &&
@@ -33,11 +37,18 @@ const buildUrl = dbEnvName => {
     return null;
   }
 
-  if (!dbEnvName) return full;
+  // Use provided dbEnvName or fall back to the default DB env key
+  const envKey = dbEnvName || DEFAULT_DB_ENV_KEY;
 
-  // dbEnvName may be either an env var key (e.g. 'PHONEBOOK_DB') or the actual DB name
+  if (!envKey) return full;
+
+  // dbCandidate may be either an env var key (e.g. 'FULLSTACKDB') or the actual DB name
   const dbCandidate =
-    process.env[dbEnvName] !== undefined ? process.env[dbEnvName] : dbEnvName;
+    process.env[envKey] !== undefined ? process.env[envKey] : envKey;
+
+  // If dbCandidate looks like a full mongo URI, return it
+  if (/^mongodb(\+srv)?:\/\//.test(dbCandidate)) return dbCandidate;
+
   return joinUrl(full, dbCandidate);
 };
 
@@ -119,5 +130,5 @@ module.exports = {
   connectIfNeeded,
   buildUrl,
   PORT,
-  FullStackDB
+  DEFAULT_DB_ENV_KEY
 };

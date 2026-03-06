@@ -1,39 +1,15 @@
 'use strict';
-const express = require('express');
-const { RequestLogger } = require('./utils/request_logger');
-
-const app = express();
-const cors = require('cors');
-const notesRouter = require('./controllers/note_router');
-const phonebookRouter = require('./controllers/phonebook_router');
-const phonebookInfoRouter = require('./controllers/phonebook_info_router');
-const blogRouter = require('./controllers/blog_router');
-const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 const logger = require('./utils/logger');
 const { PORT, connectIfNeeded } = require('./utils/config');
-
-app.use(cors());
-app.use(express.json());
-app.use(RequestLogger);
-app.use('/api/notes', notesRouter);
-app.use('/api/persons', phonebookRouter);
-app.use('/api/info', phonebookInfoRouter);
-app.use('/api/blogs', blogRouter);
-
-app.use(unknownEndpoint);
-app.use(errorHandler);
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>');
-});
+const app = require('./app');
 
 // Start the server only after establishing a MongoDB connection
 const start = async () => {
   try {
-    await connectIfNeeded({ dbEnvName: 'FULLSTACKDB' }).then(() => {
-      app.listen(PORT, () => {
-        logger.info(`Server running on port ${PORT}`);
-      });
+    await connectIfNeeded({ dbEnvName: 'FULLSTACKDB' });
+
+    app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT}`);
     });
   } catch (err) {
     logger.error(
