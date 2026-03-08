@@ -23,21 +23,21 @@ beforeEach(async () => {
 
 /** @type {import('superagent').Response} */
 describe('note_api_test', () => {
-  test.only('notes are returned as json', async () => {
+  test('notes are returned as json', async () => {
     await api
       .get('/api/notes')
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
 
-  test.only('specific note is within the returned notes', async () => {
+  test('specific note is within the returned notes', async () => {
     /** @type {import('superagent').Response} */
     const response = await api.get('/api/notes/');
     const content = response.body.map(note => note.content);
     assert.strictEqual(content.includes('HTML is easy'), true);
   });
 
-  test.only('all note is returned', async () => {
+  test('all note is returned', async () => {
     /** @type {import('superagent').Response} */
     const response = await api.get('/api/notes/');
     assert.strictEqual(response.body.length, initialNotes.length);
@@ -62,7 +62,7 @@ describe('note_api_test', () => {
     assert(contents.includes('React is fun'));
   });
 
-  test.only('a note without content cant be added', async () => {
+  test('a note without content cant be added', async () => {
     const newNote = {
       important: true
     };
@@ -72,7 +72,7 @@ describe('note_api_test', () => {
     assert.strictEqual(response.length, initialNotes.length);
   });
 
-  test.only('a specific note can be viewed', async () => {
+  test('a specific note can be viewed', async () => {
     const notesAtStart = await notesInDb();
     const noteToView = notesAtStart[0];
 
