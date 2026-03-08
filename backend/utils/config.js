@@ -1,4 +1,3 @@
-// Shared MongoDB connector for backend
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { joinUrl } = require('../helper/general_helper');

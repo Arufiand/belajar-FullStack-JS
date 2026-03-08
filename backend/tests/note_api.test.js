@@ -6,18 +6,8 @@ const supertest = require('supertest');
 const app = require('../app');
 const assert = require('assert');
 const Note = require('../models/notes');
+const { initialNotes, notesInDb, nonExistingId } = require('./test_helper');
 const { connectIfNeeded } = require('../utils/config');
-
-const initialNotes = [
-  {
-    content: 'HTML is easy',
-    important: false
-  },
-  {
-    content: 'Browser can execute only JavaScript',
-    important: true
-  }
-];
 
 const api = supertest(app);
 
@@ -51,6 +41,36 @@ describe('note_api_test', () => {
   test.only('all note is returned', async () => {
     /** @type {import('superagent').Response} */
     const response = await api.get('/api/notes/');
+    assert.strictEqual(response.body.length, initialNotes.length);
+  });
+
+  test('a valid note can be added', async () => {
+    const newNote = {
+      content: 'React is fun',
+      important: true
+    };
+    await api
+      .post('/api/notes')
+      .send(newNote)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    /** @type {import('superagent').Response} */
+    const notesAtEnd = await notesInDb();
+    assert.strictEqual(notesAtEnd.length, initialNotes.length + 1);
+
+    const contents = notesAtEnd.map(note => note.content);
+    assert(contents.includes('React is fun'));
+  });
+
+  test.only('a note without content cant be added', async () => {
+    const newNote = {
+      important: true
+    };
+    await api.post('/api/notes').send(newNote).expect(400);
+
+    /** @type {import('superagent').Response} */
+    const response = await notesInDb();
     assert.strictEqual(response.body.length, initialNotes.length);
   });
 });
