@@ -69,9 +69,31 @@ describe('note_api_test', () => {
     };
     await api.post('/api/notes').send(newNote).expect(400);
 
-    /** @type {import('superagent').Response} */
     const response = await notesInDb();
-    assert.strictEqual(response.body.length, initialNotes.length);
+    assert.strictEqual(response.length, initialNotes.length);
+  });
+
+  test.only('a specific note can be viewed', async () => {
+    const notesAtStart = await notesInDb();
+    const noteToView = notesAtStart[0];
+
+    /** @type {import('superagent').Request} */
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    assert.deepStrictEqual(resultNote.body.content, noteToView.content);
+  });
+
+  test.only('a specific note can be deleted', async () => {
+    const notesAtStart = await notesInDb();
+    const noteToDelete = notesAtStart[0];
+    await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
+    const notesAtEnd = await notesInDb();
+    const ids = notesAtEnd.map(note => note.id);
+    assert(!ids.includes(noteToDelete.id));
+    assert.strictEqual(notesAtEnd.length, initialNotes.length - 1);
   });
 });
 

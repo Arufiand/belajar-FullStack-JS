@@ -11,30 +11,22 @@ notesRouter.get('/', (request, response) => {
   });
 });
 
-notesRouter.get('/:id', async (request, response, next) => {
-  try {
-    const note = await Note.findById(request.params.id);
-    if (!note) {
-      response.statusMessage = 'note not found';
-      return response.status(404).json({ error: 'note not found' }).end();
-    }
-    response.json(note);
-  } catch (error) {
-    next(error);
+notesRouter.get('/:id', async (request, response) => {
+  const note = await Note.findById(request.params.id);
+  if (!note) {
+    response.statusMessage = 'note not found';
+    return response.status(404).json({ error: 'note not found' }).end();
   }
+  response.status(200).json(note);
 });
 
-notesRouter.delete('/:id', async (request, response, next) => {
-  try {
-    const deleted = await Note.findByIdAndDelete(request.params.id);
-    if (!deleted) {
-      response.statusMessage = 'note not found';
-      return response.status(404).json({ error: 'note not found' });
-    }
-    response.status(204).end();
-  } catch (error) {
-    next(error);
+notesRouter.delete('/:id', async (request, response) => {
+  const deleted = await Note.findByIdAndDelete(request.params.id);
+  if (!deleted) {
+    response.statusMessage = 'note not found';
+    return response.status(404).json({ error: 'note not found' });
   }
+  response.status(204).end();
 });
 
 notesRouter.post('/', async (request, response) => {

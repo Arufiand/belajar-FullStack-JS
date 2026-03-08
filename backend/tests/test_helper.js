@@ -1,4 +1,4 @@
-const Note = require('../models/note');
+const Note = require('../models/notes');
 
 const initialNotes = [
   { content: 'HTML is easy', important: false },
