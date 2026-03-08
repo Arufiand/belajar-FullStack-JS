@@ -7,63 +7,51 @@ blogRouter.get('/', (request, response) => {
   Blogs.find({}).then(persons => response.json(persons));
 });
 
-blogRouter.get('/:id', async (request, response, next) => {
-  try {
-    const Blog = await Blogs.findById(request.params.id);
-    if (!Blog) {
-      response.statusMessage = 'Blog not found';
-      return response.status(404).json({ error: 'Blog not found' });
-    }
-    response.json(Blog);
-  } catch (error) {
-    next(error);
+blogRouter.get('/:id', async (request, response) => {
+  const Blog = await Blogs.findById(request.params.id);
+  if (!Blog) {
+    response.statusMessage = 'Blog not found';
+    return response.status(404).json({ error: 'Blog not found' });
   }
+  response.json(Blog);
 });
 
-blogRouter.delete('/:id', async (request, response, next) => {
-  try {
-    const deleted = await Blogs.findByIdAndDelete(request.params.id);
-    if (!deleted) {
-      response.statusMessage = 'blog not found';
-      return response.status(404).json({ error: 'blog not found' });
-    }
-    response.status(204).end();
-  } catch (error) {
-    next(error);
+blogRouter.delete('/:id', async (request, response) => {
+  const deleted = await Blogs.findByIdAndDelete(request.params.id);
+  if (!deleted) {
+    response.statusMessage = 'blog not found';
+    return response.status(404).json({ error: 'blog not found' });
   }
+  response.status(204).end();
 });
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', async (request, response) => {
   const { title, author, url } = request.body;
   if (!title || !author || !url) {
     return response.status(400).json({ error: 'title, author & url required' });
   }
 
-  try {
-    const existing = await Blogs.findOne({
-      $or: [{ title }, { author }]
-    });
+  const existing = await Blogs.findOne({
+    $or: [{ title }, { author }]
+  });
 
-    if (existing) {
-      return response
-        .status(400)
-        .json({ error: 'title and / or author must be unique' });
-    }
-
-    const blog = new Blogs({
-      title,
-      author,
-      url
-    });
-
-    const savedData = await blog.save();
-    return response.status(201).json(savedData);
-  } catch (error) {
-    next(error);
+  if (existing) {
+    return response
+      .status(400)
+      .json({ error: 'title and / or author must be unique' });
   }
+
+  const blog = new Blogs({
+    title,
+    author,
+    url
+  });
+
+  const savedData = await blog.save();
+  return response.status(201).json(savedData);
 });
 
-blogRouter.put('/:id', async (request, response, next) => {
+blogRouter.put('/:id', async (request, response) => {
   const body = request.body;
   const update = {
     title: body.title,
@@ -72,22 +60,18 @@ blogRouter.put('/:id', async (request, response, next) => {
     likes: body.likes
   };
 
-  try {
-    const updated = await Blogs.findByIdAndUpdate(request.params.id, update, {
-      new: true,
-      runValidators: true,
-      context: 'query'
-    });
+  const updated = await Blogs.findByIdAndUpdate(request.params.id, update, {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  });
 
-    if (!updated) {
-      response.statusMessage = 'blog not found';
-      return response.status(404).json({ error: 'blog not found' });
-    }
-
-    response.json(updated);
-  } catch (error) {
-    next(error);
+  if (!updated) {
+    response.statusMessage = 'blog not found';
+    return response.status(404).json({ error: 'blog not found' });
   }
+
+  response.json(updated);
 });
 
 module.exports = blogRouter;
