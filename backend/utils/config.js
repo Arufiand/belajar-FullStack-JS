@@ -3,7 +3,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { joinUrl } = require('../helper/general_helper');
 const logger = require('./logger');
-
 mongoose.set('strictQuery', false);
 
 let _connecting = null;
@@ -12,41 +11,31 @@ let _connectedUrl = null;
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGOURL;
 
-// Default env var key to use for DB selection depending on NODE_ENV
 const DEFAULT_DB_ENV_KEY =
   process.env.NODE_ENV === 'test' ? 'FULLSTACKDBTEST' : 'FULLSTACKDB';
 
 const buildUrl = dbEnvName => {
-  // prefer MONGODB_URI if set, then MONGOURL
   const full = process.env.MONGODB_URI || MONGO_URL;
-
-  // If caller passed a full connection string directly as dbEnvName, accept it
   if (dbEnvName && /^mongodb(\+srv)?:\/\//.test(dbEnvName)) return dbEnvName;
 
-  // If there's no base URL configured
   if (!full) {
     if (!dbEnvName) return null;
-    // If caller passed an env var name whose value is a full connection string, use it
     if (
       process.env[dbEnvName] &&
       /^mongodb(\+srv)?:\/\//.test(process.env[dbEnvName])
     ) {
       return process.env[dbEnvName];
     }
-    // Otherwise we can't build a connection string without a base URL
     return null;
   }
 
-  // Use provided dbEnvName or fall back to the default DB env key
   const envKey = dbEnvName || DEFAULT_DB_ENV_KEY;
 
   if (!envKey) return full;
 
-  // dbCandidate may be either an env var key (e.g. 'FULLSTACKDB') or the actual DB name
   const dbCandidate =
     process.env[envKey] !== undefined ? process.env[envKey] : envKey;
 
-  // If dbCandidate looks like a full mongo URI, return it
   if (/^mongodb(\+srv)?:\/\//.test(dbCandidate)) return dbCandidate;
 
   return joinUrl(full, dbCandidate);

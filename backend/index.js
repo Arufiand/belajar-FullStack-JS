@@ -3,7 +3,6 @@ const logger = require('./utils/logger');
 const { PORT, connectIfNeeded } = require('./utils/config');
 const app = require('./app');
 
-// Start the server only after establishing a MongoDB connection
 const start = async () => {
   try {
     await connectIfNeeded({ dbEnvName: 'FULLSTACKDB' });

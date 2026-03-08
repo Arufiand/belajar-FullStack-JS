@@ -22,7 +22,7 @@ const initialNotes = [
 const api = supertest(app);
 
 before(async () => {
-  await connectIfNeeded(); // selects test DB when NODE_ENV === 'test'
+  await connectIfNeeded();
 });
 beforeEach(async () => {
   await Note.deleteMany({});
