@@ -16,10 +16,9 @@ before(async () => {
 });
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(initialNotes[1]);
-  await noteObject.save();
+
+  const promiseNotes = initialNotes.map(note => new Note(note).save());
+  await Promise.all(promiseNotes);
 });
 
 /** @type {import('superagent').Response} */
@@ -86,7 +85,7 @@ describe('note_api_test', () => {
     assert.deepStrictEqual(resultNote.body.content, noteToView.content);
   });
 
-  test.only('a specific note can be deleted', async () => {
+  test('a specific note can be deleted', async () => {
     const notesAtStart = await notesInDb();
     const noteToDelete = notesAtStart[0];
     await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
