@@ -5,7 +5,11 @@ mongoose.set('strictQuery', false);
 const noteSchema = new mongoose.Schema({
   content: { type: String, required: true, minlength: 5 },
   importance: { type: Boolean, default: false },
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  users: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
