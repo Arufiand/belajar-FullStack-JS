@@ -6,6 +6,7 @@ const notesRouter = require('./controllers/note_router');
 const phonebookRouter = require('./controllers/phonebook_router');
 const phonebookInfoRouter = require('./controllers/phonebook_info_router');
 const blogRouter = require('./controllers/blog_router');
+const userRouter = require('./controllers/user_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(RequestLogger);
 
+app.use('/api/users', userRouter);
 app.use('/api/notes', notesRouter);
 app.use('/api/persons', phonebookRouter);
 app.use('/api/info', phonebookInfoRouter);
