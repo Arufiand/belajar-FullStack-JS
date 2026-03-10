@@ -114,9 +114,14 @@ const connectIfNeeded = async (options = {}) => {
   }
 };
 
+const closeConnection = async () => {
+  await mongoose.connection.close();
+};
+
 module.exports = {
   connectIfNeeded,
   buildUrl,
   PORT,
-  DEFAULT_DB_ENV_KEY
+  DEFAULT_DB_ENV_KEY,
+  closeConnection
 };
