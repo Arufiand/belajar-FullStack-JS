@@ -22,12 +22,13 @@ before(async () => {
 beforeEach(async () => {
   await Blog.deleteMany({});
   const blogs = initializeBlogs();
+  console.log('blogs', blogs);
   const promiseBlogs = blogs.map(blog => new Blog(blog).save());
   await Promise.all(promiseBlogs);
 });
 
 describe('blog_test', () => {
-  test('blogs are returned as json', async () => {
+  test.only('blogs are returned as json', async () => {
     await api
       .get('/api/blogs/')
       .expect(200)
@@ -54,8 +55,8 @@ describe('blog_test', () => {
   test('post and count of blog are increment by one', async () => {
     const initialBlogsCount = (await blogsInDb()).length;
     const newBlog = {
-      title: 'React patterns',
-      author: '',
+      title: 'React patterns 2',
+      author: 'NowWereTalking',
       url: 'https://reactpatterns.com/'
     };
     await api.post('/api/blogs').send(newBlog).expect(201);
@@ -65,13 +66,13 @@ describe('blog_test', () => {
 
   test('post an blog without likes and make sure the default likes is 0', async () => {
     const newBlog = {
-      title: 'React patterns',
-      author: '',
+      title: 'React patterns 3',
+      author: 'AhanjingLah',
       url: 'https://reactpatterns.com/'
     };
     await api.post('/api/blogs').send(newBlog).expect(201);
     const blogsAtEnd = await blogsInDb();
-    const added = blogsAtEnd.find(blog => blog.title === 'React patterns');
+    const added = blogsAtEnd.find(blog => blog.title === 'React patterns 3');
     assert.strictEqual(added.likes, 0);
   });
 
@@ -82,6 +83,31 @@ describe('blog_test', () => {
     await api.post('/api/blogs').send(newBlog).expect(400);
     const blogsAtEnd = await blogsInDb();
     assert.strictEqual(blogsAtEnd.length, initializeBlogs().length);
+  });
+
+  test('deleting a blog', async () => {
+    const blogAtStart = (await blogsInDb())[0];
+    await api.delete(`/api/blogs/${blogAtStart.id}`).expect(204);
+    const blogsAtEnd = await blogsInDb();
+    assert.strictEqual(blogsAtEnd.length, initializeBlogs().length - 1);
+    const ids = blogsAtEnd.map(blog => blog.id);
+    assert(!ids.includes(blogAtStart.id));
+  });
+
+  test('update blog likes', async () => {
+    const blogAtStart = (await blogsInDb())[0];
+    const updatedBlog = {
+      title: blogAtStart.title,
+      author: blogAtStart.author,
+      url: blogAtStart.url,
+      likes: blogAtStart.likes + 1
+    };
+    await api.put(`/api/blogs/${blogAtStart.id}`).send(updatedBlog).expect(200);
+    const blogsAtEnd = await blogsInDb();
+    const updatedBlogAtEnd = blogsAtEnd.find(
+      blog => blog.id === blogAtStart.id
+    );
+    assert.strictEqual(updatedBlogAtEnd.likes, updatedBlog.likes);
   });
 });
 

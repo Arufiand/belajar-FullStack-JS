@@ -3,13 +3,13 @@ const Blog = require('../models/blogs');
 const initializeBlogs = () => [
   {
     title: 'Go To Statement Considered Harmful',
-    author: '',
+    author: 'SimplyFund',
     url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
     likes: 5
   },
   {
     title: 'React patterns',
-    author: '',
+    author: 'FundedSepecially',
     url: 'https://reactpatterns.com/',
     likes: 7
   }
