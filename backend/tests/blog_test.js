@@ -22,7 +22,6 @@ before(async () => {
 beforeEach(async () => {
   await Blog.deleteMany({});
   const blogs = initializeBlogs();
-  console.log('blogs', blogs);
   const promiseBlogs = blogs.map(blog => new Blog(blog).save());
   await Promise.all(promiseBlogs);
 });
