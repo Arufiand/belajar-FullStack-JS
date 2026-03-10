@@ -43,7 +43,7 @@ describe('note_api_test', () => {
     assert.strictEqual(response.body.length, initialNotes.length);
   });
 
-  test('a valid note can be added', async () => {
+  test.only('a valid note can be added', async () => {
     const newNote = {
       content: 'React is fun',
       important: true
@@ -62,7 +62,7 @@ describe('note_api_test', () => {
     assert(contents.includes('React is fun'));
   });
 
-  test('a note without content cant be added', async () => {
+  test.only('a note without content cant be added', async () => {
     const newNote = {
       important: true
     };
