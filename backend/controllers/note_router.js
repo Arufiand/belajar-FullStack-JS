@@ -7,9 +7,8 @@ const Note = require('../models/notes');
 const User = require('../models/users');
 
 notesRouter.get('/', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes);
-  });
+  const Notes = Note.find({}).populate('users', { username: 1, name: 1 });
+  response.json(Notes);
 });
 
 notesRouter.get('/:id', async (request, response) => {
