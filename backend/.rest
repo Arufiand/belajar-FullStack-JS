@@ -68,10 +68,16 @@ Content-Type: application/json
 GET http://localhost:3001/api/info
 
 
-###
+### LoginTesting
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "sekret"
+}
 
 # Notes
-# Tips:
-# - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
+# Tips: # - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
 # - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
 # - Ensure there is a blank line between headers and JSON body in POST/PUT requests.

@@ -8,6 +8,7 @@ const phonebookInfoRouter = require('./controllers/phonebook_info_router');
 const blogRouter = require('./controllers/blog_router');
 const userRouter = require('./controllers/user_router');
 const { errorHandler, unknownEndpoint } = require('./utils/middleware');
+const loginRouter = require('./controllers/login_router');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/api/notes', notesRouter);
 app.use('/api/persons', phonebookRouter);
 app.use('/api/info', phonebookInfoRouter);
 app.use('/api/blogs', blogRouter);
+app.use('/api/login', loginRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
