@@ -15,6 +15,22 @@ userRouter.get('/', async (req, res) => {
 
 userRouter.post('/signup', async (req, res) => {
   const { username, password, name } = req.body;
+
+  if (!username || !password || !name) {
+    return res
+      .status(400)
+      .json({ error: 'username, password and name required' });
+  }
+  if (username.length < 3 || password.length < 3)
+    return res
+      .status(400)
+      .json({ error: 'username, password must be at least 3 characters long' });
+
+  const usernameExists = await User.findOne({ username });
+  if (usernameExists) {
+    return res.status(400).json({ error: 'username must be unique' });
+  }
+
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
   const user = new User({ username, passwordHash, name });
