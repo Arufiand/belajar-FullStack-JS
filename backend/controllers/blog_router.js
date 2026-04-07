@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 const Blogs = require('../models/blogs');
+const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const blogRouter = express.Router();
 
@@ -31,17 +32,15 @@ blogRouter.delete('/:id', async (request, response) => {
   } catch (error) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
-
-  if (!id) {
-    return response.status(400).json({ error: 'id is required' });
-  }
-
+  if (decodedToken.id === undefined)
+    return response.status(401).json({ error: 'token missing or invalid' });
+  const userId = await User.findById(decodedToken.id);
   const blogFound = await Blogs.findById(id);
   if (!blogFound) {
     return response.status(404).json({ error: 'blog not found' });
   }
 
-  if (blogFound.user.toString() !== decodedToken.id.toString()) {
+  if (blogFound.user.toString() !== userId) {
     return response
       .status(401)
       .json({ error: 'user not authorized to delete this blog' });
@@ -54,9 +53,10 @@ blogRouter.delete('/:id', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
   const { title, author, url } = request.body;
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodedToken) {
+  if (!decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
+
   if (!title || !author || !url) {
     return response.status(400).json({ error: 'title, author & url required' });
   }
