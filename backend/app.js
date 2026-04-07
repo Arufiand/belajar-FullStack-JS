@@ -7,7 +7,11 @@ const phonebookRouter = require('./controllers/phonebook_router');
 const phonebookInfoRouter = require('./controllers/phonebook_info_router');
 const blogRouter = require('./controllers/blog_router');
 const userRouter = require('./controllers/user_router');
-const { errorHandler, unknownEndpoint } = require('./utils/middleware');
+const {
+  errorHandler,
+  unknownEndpoint,
+  getTokenFrom
+} = require('./utils/middleware');
 const loginRouter = require('./controllers/login_router');
 
 const app = express();
@@ -15,6 +19,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(RequestLogger);
+
+app.use(getTokenFrom);
 
 app.use('/api/users', userRouter);
 app.use('/api/notes', notesRouter);

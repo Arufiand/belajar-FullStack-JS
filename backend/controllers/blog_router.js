@@ -1,10 +1,16 @@
 'use strict';
 const express = require('express');
 const Blogs = require('../models/blogs');
+const jwt = require('jsonwebtoken');
 const blogRouter = express.Router();
 
-blogRouter.get('/', (request, response) => {
-  Blogs.find({}).then(persons => response.json(persons));
+blogRouter.get('/', async (request, response) => {
+  const blogFetch = await Blogs.find({}).populate('users', {
+    username: 1,
+    name: 1,
+    id: 1
+  });
+  response.json(blogFetch);
 });
 
 blogRouter.get('/:id', async (request, response) => {
@@ -27,6 +33,10 @@ blogRouter.delete('/:id', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
   const { title, author, url } = request.body;
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
   if (!title || !author || !url) {
     return response.status(400).json({ error: 'title, author & url required' });
   }

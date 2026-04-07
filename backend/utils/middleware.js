@@ -26,4 +26,14 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-module.exports = { unknownEndpoint, errorHandler };
+const getTokenFrom = (req, res, next) => {
+  const authorization = req.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    req.token = authorization.replace('bearer ', '');
+  } else {
+    req.token = null;
+  }
+  next();
+};
+
+module.exports = { unknownEndpoint, errorHandler, getTokenFrom };
