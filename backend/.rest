@@ -79,6 +79,13 @@ Content-Type: application/json
 
 ###
 
+### ApiBlog - list all
+GET http://localhost:3001/api/blogs
+Content-Type: application/json
+
+###
+
+
 # Notes
 # Tips: # - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
 # - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
