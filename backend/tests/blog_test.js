@@ -6,8 +6,8 @@ const { connectIfNeeded } = require('../utils/config');
 const Blog = require('../models/blogs');
 const {
   initializeBlogs,
-  blogsInDb,
-  nonExistingId
+  blogsInDb
+  // nonExistingId
 } = require('./blog_test_helper');
 const app = require('../app');
 const assert = require('assert');

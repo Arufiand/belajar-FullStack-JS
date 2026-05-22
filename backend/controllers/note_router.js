@@ -6,7 +6,7 @@ const notesRouter = express.Router();
 const Note = require('../models/notes');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
-const { getTokenFrom } = require('../utils/token_midleware');
+// const { getTokenFrom } = require('../utils/token_midleware');
 
 notesRouter.get('/', (request, response) => {
   const Notes = Note.find({}).populate('users', { username: 1, name: 1 });

@@ -4,9 +4,19 @@ const userRouter = express.Router();
 const bcrypt = require('bcrypt');
 
 const User = require('../models/users');
+const jwt = require('jsonwebtoken');
 
 userRouter.get('/', async (req, res) => {
-  const Users = await User.find({}).populate('notes', {
+  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (!decodedToken) {
+    return res.status(401).json({ error: 'token missing or invalid' });
+  }
+  const user = await User.findById(decodedToken.id);
+
+  if (!user) {
+    return res.status(404).json({ error: 'user not found' });
+  }
+  const Users = await User.find().populate('notes', {
     content: 1,
     important: 1
   });

@@ -85,7 +85,12 @@ Content-Type: application/json
 
 ###
 
+### users get all users
+GET http://localhost:3001/api/users
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2YTEwNGY5MGUyMTg5YzE4N2U0NzZjZTIiLCJpYXQiOjE3Nzk0NjE2MTIsImV4cCI6MTc3OTQ2NTIxMn0.p6Fp6hgNVD9IdMg0K8T7p3zfZ2s_dFvYSzrzcqTSw1U")}}
 
+###
 # Notes
 # Tips: # - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
 # - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
