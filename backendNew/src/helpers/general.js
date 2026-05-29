@@ -8,4 +8,17 @@ function urlJoiner(base = '', path = '') {
   return queryString ? `${joined}?${queryString}` : joined;
 }
 
-module.exports = { urlJoiner };
+const listRoutes = (routers) => {
+  const routes = [];
+  routers.forEach(({ prefix, router }) => {
+    router.stack.forEach(layer => {
+      if (layer.route) {
+        const methods = Object.keys(layer.route.methods).map(m => m.toUpperCase());
+        routes.push({ method: methods.join(','), path: prefix + layer.route.path });
+      }
+    });
+  });
+  return routes;
+};
+
+module.exports = { urlJoiner, listRoutes };

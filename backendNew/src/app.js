@@ -7,6 +7,7 @@ const {
   unknownEndpoint,
   getTokenFrom
 } = require('./helpers/middleware');
+const { listRoutes } = require('./helpers/general');
 const authRouter = require('./routers/router.auth');
 const usersRouter = require('./routers/router.users');
 
@@ -19,6 +20,16 @@ app.use(getTokenFrom);
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+
+if (process.env.NODE_ENV === 'development') {
+  app.get('/api/routes', (req, res) => {
+    const routes = listRoutes([
+      { prefix: '/api/auth', router: authRouter },
+      { prefix: '/api/users', router: usersRouter }
+    ]);
+    res.json(routes);
+  });
+}
 
 app.use(unknownEndpoint);
 app.use(errorHandler);

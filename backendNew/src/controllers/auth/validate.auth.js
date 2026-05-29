@@ -1,4 +1,4 @@
-const { getDataByFilter } = require('../../core/service');
+const { getOneDataByFilter } = require('../../core/service');
 const User = require('../../models/users');
 
 async function validateAuthRegister({ data }) {
@@ -17,7 +17,7 @@ async function validateAuthRegister({ data }) {
     valid = false;
     message = 'Name is required';
   } else {
-    const existing = await getDataByFilter({
+    const existing = await getOneDataByFilter({
       model: User,
       filter: { username },
       single: true
@@ -34,6 +34,7 @@ async function validateAuthRegister({ data }) {
 async function validateAuthLogin({ username, password }) {
   let valid = true;
   let message = '';
+  let user = null;
 
   if (!username) {
     valid = false;
@@ -41,10 +42,19 @@ async function validateAuthLogin({ username, password }) {
   } else if (!password) {
     valid = false;
     message = 'Password is required';
+  } else {
+    user = await getOneDataByFilter({
+      model: User,
+      filter: { username },
+      single: true
+    });
+    if (!user) {
+      valid = false;
+      message = 'Username not found';
+    }
   }
 
-
-  return { valid, message };
+  return { valid, message, user };
 }
 
 module.exports = { validateAuthRegister, validateAuthLogin };

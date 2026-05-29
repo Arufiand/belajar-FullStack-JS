@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { postData, getDataByFilter } = require('../../core/service');
+const { postData } = require('../../core/service');
 const User = require('../../models/users');
 const { validateAuthRegister, validateAuthLogin } = require('./validate.auth');
 
@@ -13,7 +13,8 @@ const registerUser = async (req, res) => {
   if (!validationUser.valid) {
     response = res.status(400).json({ error: validationUser.message });
   } else {
-    const passwordHash = await bcrypt.hash(body.password, process.env.SALT);
+    const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
+    const passwordHash = await bcrypt.hash(body.password, salt);
     const user = await postData({
       model: User,
       data: { username: body.username, name: body.name, passwordHash }
@@ -31,14 +32,9 @@ const loginUser = async (req, res) => {
   if (!validation.valid) {
     response = res.status(400).json({ error: validation.message });
   } else {
-    const user = await getDataByFilter({
-      model: User,
-      filter: { username },
-      single: true
-    });
-    const passwordCorrect =
-      user === null ? false : await bcrypt.compare(password, user.passwordHash);
-    if (!user || !passwordCorrect) {
+    const { user } = validation;
+    const passwordCorrect = bcrypt.compare(password, user.passwordHash);
+    if (!passwordCorrect) {
       response = res
         .status(401)
         .json({ error: 'Invalid username or password' });
