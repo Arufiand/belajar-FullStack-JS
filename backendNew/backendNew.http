@@ -1,0 +1,27 @@
+### Post User Register
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "Arufiand",
+  "password": "Abcd1234!",
+  "name": "Arufiand"
+}
+
+###
+
+### Post User Register
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Arufiand",
+  "password": "Abcd1234!"
+}
+
+###
+
+### GET All Routes
+GET localhost:3001/api/routes
+
+###
