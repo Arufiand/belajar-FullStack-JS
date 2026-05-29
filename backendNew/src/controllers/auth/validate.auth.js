@@ -1,9 +1,7 @@
-'use strict';
+const { getDataByFilter } = require('../../core/service');
+const User = require('../../models/users');
 
-const User = require('../models/users');
-const { getDataByFilter } = require('../core/service');
-
-async function validateUserRegister({ data }) {
+async function validateAuthRegister({ data }) {
   const { username, password, name } = data;
 
   let valid = true;
@@ -33,26 +31,20 @@ async function validateUserRegister({ data }) {
   return { valid, message };
 }
 
-async function validateUserUpdate({ data, id }) {
+async function validateAuthLogin({ username, password }) {
   let valid = true;
   let message = '';
 
-  if (!data || Object.keys(data).length === 0) {
+  if (!username) {
     valid = false;
-    message = 'No fields provided to update';
-  } else if (data.username) {
-    const existing = await getDataByFilter({
-      model: User,
-      filter: { username: data.username },
-      single: true
-    });
-    if (existing && existing._id.toString() !== id) {
-      valid = false;
-      message = 'Username already taken';
-    }
+    message = 'Username is required';
+  } else if (!password) {
+    valid = false;
+    message = 'Password is required';
   }
+
 
   return { valid, message };
 }
 
-module.exports = { validateUserRegister, validateUserUpdate };
+module.exports = { validateAuthRegister, validateAuthLogin };

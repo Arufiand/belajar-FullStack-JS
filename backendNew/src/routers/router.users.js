@@ -1,4 +1,18 @@
-const { getAllUsers } = require('../controllers/controller.users');
-const { router } = require('express/lib/application');
+'use strict';
 
-router.get('/users', getAllUsers);
+const express = require('express');
+const {
+  getAllUsers,
+  deleteUser,
+  updateUser,
+  getUserById
+} = require('../controllers/users/controller.users');
+
+const usersRouter = express.Router();
+
+usersRouter.get('/', getAllUsers);
+usersRouter.get('/:id', getUserById);
+usersRouter.put('/:id', updateUser);
+usersRouter.delete('/:id', deleteUser);
+
+module.exports = usersRouter;

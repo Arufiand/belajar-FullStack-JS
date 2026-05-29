@@ -4,14 +4,10 @@ const {
   getAllData,
   getDataFromId,
   deleteData,
-  updateData,
-  postData
-} = require('../core/service');
-const User = require('../models/users');
-const {
-  validateUserRegister,
-  validateUserUpdate
-} = require('./validate.users');
+  updateData
+} = require('../../core/service');
+const User = require('../../models/users');
+const { validateUserUpdate } = require('./validate.users');
 
 const getAllUsers = async (req, res) => {
   const users = await getAllData({
@@ -63,17 +59,4 @@ const updateUser = async (req, res) => {
   return response;
 };
 
-const postUser = async (req, res) => {
-  const { body } = req;
-  const validationUser = await validateUserRegister({ data: body });
-  let response;
-  if (!validationUser.valid) {
-    response = res.status(400).json({ error: validationUser.message });
-  } else {
-    const user = await postData({ model: User, data: body });
-    response = res.status(201).json(user);
-  }
-  return response;
-};
-
-module.exports = { getAllUsers, getUserById, deleteUser, updateUser, postUser };
+module.exports = { getAllUsers, getUserById, deleteUser, updateUser };
