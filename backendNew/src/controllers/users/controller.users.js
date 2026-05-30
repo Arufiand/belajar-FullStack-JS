@@ -31,7 +31,7 @@ const getUserById = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const { id } = req.params;
+  const id = req.user.id;
   const user = await deleteData({ model: User, id });
   let response;
   if (!user) {
@@ -53,7 +53,10 @@ const updateUser = async (req, res) => {
     const updateFields = { ...body };
     if (updateFields.password) {
       const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
-      updateFields.passwordHash = await bcrypt.hash(updateFields.password, salt);
+      updateFields.passwordHash = await bcrypt.hash(
+        updateFields.password,
+        salt
+      );
       delete updateFields.password;
     }
     const user = await updateData({ model: User, id, data: updateFields });

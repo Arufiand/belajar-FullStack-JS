@@ -38,6 +38,13 @@ Authorization: Bearer {{auth_token}}
 
 ###
 
+### Post User Register
+DELETE http://localhost:3001/api/users/
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+###
+
 ### GET All Routes
 GET localhost:3001/api/routes
 
