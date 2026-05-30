@@ -7,12 +7,13 @@ const {
   updateUser,
   getUserById
 } = require('../controllers/users/controller.users');
+const { verifyToken } = require('../helpers/middleware');
 
 const usersRouter = express.Router();
 
 usersRouter.get('/', getAllUsers);
 usersRouter.get('/:id', getUserById);
-usersRouter.put('/:id', updateUser);
+usersRouter.put('/', verifyToken, updateUser);
 usersRouter.delete('/:id', deleteUser);
 
 module.exports = usersRouter;

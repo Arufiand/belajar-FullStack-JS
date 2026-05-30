@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../../models/users');
-const { getDataByFilter } = require('../../core/service');
+const { getOneDataByFilter } = require('../../core/service');
 
 async function validateUserUpdate({ data, id }) {
   let valid = true;
@@ -11,7 +11,7 @@ async function validateUserUpdate({ data, id }) {
     valid = false;
     message = 'No fields provided to update';
   } else if (data.username) {
-    const existing = await getDataByFilter({
+    const existing = await getOneDataByFilter({
       model: User,
       filter: { username: data.username },
       single: true

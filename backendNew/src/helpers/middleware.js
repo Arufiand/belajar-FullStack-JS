@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const logger = require('./logger');
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
@@ -12,7 +13,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: error.message });
   } else if (
     error.name === 'MongoServerError' &&
-        error.message.includes('E11000 duplicate key error')
+    error.message.includes('E11000 duplicate key error')
   ) {
     return response
       .status(400)
@@ -29,11 +30,23 @@ const errorHandler = (error, request, response, next) => {
 const getTokenFrom = (req, res, next) => {
   const authorization = req.get('authorization');
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    req.token = authorization.replace('bearer ', '');
+    req.token = authorization.substring(7);
   } else {
     req.token = null;
   }
   next();
 };
 
-module.exports = { unknownEndpoint, errorHandler, getTokenFrom };
+const verifyToken = (req, res, next) => {
+  if (!req.token) {
+    return res.status(401).json({ error: 'token missing' });
+  }
+  try {
+    req.user = jwt.verify(req.token, process.env.SECRET);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { unknownEndpoint, errorHandler, getTokenFrom, verifyToken };

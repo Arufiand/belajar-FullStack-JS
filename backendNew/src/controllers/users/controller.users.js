@@ -1,5 +1,6 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
 const {
   getAllData,
   getDataFromId,
@@ -42,14 +43,20 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
+  const id = req.user.id;
   const { body } = req;
   const validationUser = await validateUserUpdate({ data: body, id });
   let response;
   if (!validationUser.valid) {
     response = res.status(400).json({ error: validationUser.message });
   } else {
-    const user = await updateData({ model: User, id, data: body });
+    const updateFields = { ...body };
+    if (updateFields.password) {
+      const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
+      updateFields.passwordHash = await bcrypt.hash(updateFields.password, salt);
+      delete updateFields.password;
+    }
+    const user = await updateData({ model: User, id, data: updateFields });
     if (!user) {
       response = res.status(404).json({ error: 'Not Found' });
     } else {

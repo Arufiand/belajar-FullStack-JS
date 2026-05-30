@@ -24,7 +24,7 @@ const deleteData = async ({ model, id }) => {
 };
 
 const updateData = async ({ model, id, data }) => {
-  return await model.findByIdAndUpdate(id, data, {});
+  return await model.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
 };
 
 const postData = async ({ model, data }) => {

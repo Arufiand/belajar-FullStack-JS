@@ -33,7 +33,7 @@ const loginUser = async (req, res) => {
     response = res.status(400).json({ error: validation.message });
   } else {
     const { user } = validation;
-    const passwordCorrect = bcrypt.compare(password, user.passwordHash);
+    const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
     if (!passwordCorrect) {
       response = res
         .status(401)

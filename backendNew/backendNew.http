@@ -10,13 +10,30 @@ Content-Type: application/json
 
 ###
 
-### Post User Register
+### Post User Login
 POST http://localhost:3001/api/auth/login
 Content-Type: application/json
 
 {
   "username": "Arufiand",
   "password": "Abcd1234!"
+}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+###
+
+### Post User Register
+PUT http://localhost:3001/api/users/
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "username": "Arufiand",
+  "password": "Abcd1234!",
+  "name": "Arufian Danunuyu"
 }
 
 ###
