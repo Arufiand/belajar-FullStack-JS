@@ -6,7 +6,7 @@ const {
   deleteUser,
   updateUser,
   getUserById
-} = require('../controllers/users/controller.users');
+} = require('../controllers/users/users.controller');
 const { verifyToken } = require('../helpers/middleware');
 
 const usersRouter = express.Router();

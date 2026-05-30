@@ -7,7 +7,7 @@ const {
   unknownEndpoint,
   getTokenFrom
 } = require('./helpers/middleware');
-const { listRoutes } = require('./helpers/general');
+const { listRoutes } = require('./helpers/generalHelper');
 const authRouter = require('./routers/router.auth');
 const usersRouter = require('./routers/router.users');
 

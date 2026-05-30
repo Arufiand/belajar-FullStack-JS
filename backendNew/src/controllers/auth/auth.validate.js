@@ -1,4 +1,4 @@
-const { getOneDataByFilter } = require('../../core/service');
+const { getOneDataByFilter } = require('../../core/mongoQueryHelper');
 const User = require('../../models/users');
 
 async function validateAuthRegister({ data }) {

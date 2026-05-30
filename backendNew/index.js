@@ -1,6 +1,6 @@
 'use strict';
 const logger = require('./src/helpers/logger');
-const { PORT, dbConnection } = require('./src/core/config');
+const { PORT, dbConnection } = require('./src/core/databaseConfig');
 const app = require('./src/app');
 
 const index = async () => {

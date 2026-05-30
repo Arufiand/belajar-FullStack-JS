@@ -6,9 +6,9 @@ const {
   getDataFromId,
   deleteData,
   updateData
-} = require('../../core/service');
+} = require('../../core/mongoQueryHelper');
 const User = require('../../models/users');
-const { validateUserUpdate } = require('./validate.users');
+const { validateUserUpdate } = require('./users.validate');
 
 const getAllUsers = async (req, res) => {
   const users = await getAllData({

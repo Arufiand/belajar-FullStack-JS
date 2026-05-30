@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { urlJoiner } = require('../helpers/general');
+const { urlJoiner } = require('../helpers/generalHelper');
 const logger = require('../helpers/logger');
 mongoose.set('strictQuery', false);
 

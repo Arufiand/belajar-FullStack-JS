@@ -2,9 +2,9 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { postData } = require('../../core/service');
+const { postData } = require('../../core/mongoQueryHelper');
 const User = require('../../models/users');
-const { validateAuthRegister, validateAuthLogin } = require('./validate.auth');
+const { validateAuthRegister, validateAuthLogin } = require('./auth.validate');
 
 const registerUser = async (req, res) => {
   const { body } = req;

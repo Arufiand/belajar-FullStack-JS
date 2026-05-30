@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../../models/users');
-const { getOneDataByFilter } = require('../../core/service');
+const { getOneDataByFilter } = require('../../core/mongoQueryHelper');
 
 async function validateUserUpdate({ data, id }) {
   let valid = true;
