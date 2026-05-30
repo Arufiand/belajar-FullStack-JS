@@ -1,11 +1,11 @@
 'use strict';
 const logger = require('./src/helpers/logger');
-const { PORT, dbConnection } = require('./src/core/databaseConfig');
+const { PORT, startConnection } = require('./src/core/databaseConfig');
 const app = require('./src/app');
 
 const index = async () => {
   try {
-    await dbConnection({ dbEnvName: 'FULLSTACKDB' });
+    await startConnection({ dbEnvName: 'FULLSTACKDB' });
     app.listen(PORT, () => {
       logger.info('Server started on port', PORT);
     });

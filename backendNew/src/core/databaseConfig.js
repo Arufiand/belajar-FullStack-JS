@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ override: false });
 const mongoose = require('mongoose');
 const { urlJoiner } = require('../helpers/generalHelper');
 const logger = require('../helpers/logger');
@@ -40,7 +40,7 @@ const buildUrl = dbEnvName => {
   return urlJoiner(fullUrl, dbCandidate);
 };
 
-const dbConnection = async (options = {}) => {
+const startConnection = async (options = {}) => {
   const { url, dbEnvName, retries = 2, delay = 1500 } = options || {};
 
   const mongoUrl = url || buildUrl(dbEnvName);
@@ -104,7 +104,7 @@ const dbConnection = async (options = {}) => {
     if (retries > 0) {
       logger.info(`retrying in ${delay}ms (${retries} retries left)`);
       await new Promise(res => setTimeout(res, delay));
-      return dbConnection({
+      return startConnection({
         url: mongoUrl,
         retries: retries - 1,
         delay: delay * 2
@@ -119,7 +119,7 @@ const closeConnection = async () => {
 };
 
 module.exports = {
-  dbConnection,
+  startConnection,
   buildUrl,
   PORT,
   DEFAULT_DB_ENV_KEY,
