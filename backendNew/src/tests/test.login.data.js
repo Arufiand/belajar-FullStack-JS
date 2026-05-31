@@ -9,4 +9,9 @@ const loginUser = {
   password: 'salainen'
 };
 
-module.exports = { seedUser, loginUser };
+const notesData = {
+  content: 'Test note content',
+  importance: true
+};
+
+module.exports = { seedUser, loginUser, notesData };
