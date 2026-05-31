@@ -2,12 +2,18 @@
 
 const express = require('express');
 const {
-  getNotesFromCurrentUser
+  getNotesFromCurrentUser,
+  createNote,
+  updateNote,
+  deleteNote
 } = require('../controllers/notes/notes.controller');
 const { verifyToken } = require('../helpers/middleware');
 
-const usersRouter = express.Router();
+const notesRouter = express.Router();
 
-usersRouter.get('/', verifyToken, getNotesFromCurrentUser);
+notesRouter.get('/', verifyToken, getNotesFromCurrentUser);
+notesRouter.post('/note', verifyToken, createNote);
+notesRouter.put('/note/:id', verifyToken, updateNote);
+notesRouter.delete('/note/:id', verifyToken, deleteNote);
 
-module.exports = usersRouter;
+module.exports = notesRouter;

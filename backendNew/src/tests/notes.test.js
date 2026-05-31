@@ -1,0 +1,98 @@
+'use strict';
+
+const { describe, test } = require('node:test');
+const assert = require('node:assert');
+const { api, setupDB, loginAndGetToken, notesData } = require('./test.helper');
+
+setupDB();
+
+describe('Notes API', () => {
+  describe('POST /api/notes/note', () => {
+    test('create and return created note', async () => {
+      const token = await loginAndGetToken();
+      const res = await api
+        .post('/api/notes/note')
+        .set('Authorization', `Bearer ${token}`)
+        .send(notesData)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+      assert.strictEqual(Object.keys(res.body).length, 5);
+      assert.strictEqual(res.body.content, notesData.content);
+      assert.strictEqual(res.body.importance, notesData.importance);
+      assert.ok(res.body.date);
+      assert.ok(res.body.users);
+    });
+  });
+
+  describe('GET /api/notes', () => {
+    test('get all notes for current user', async () => {
+      const token = await loginAndGetToken();
+      const res = await api
+        .get('/api/notes/')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      assert.strictEqual(Array.isArray(res.body), true);
+      assert.strictEqual(res.body.length, 1);
+    });
+  });
+
+  describe('PUT /api/notes/note', () => {
+    test('update and return updated note', async () => {
+      const token = await loginAndGetToken();
+      const getNotes = await api
+        .get('/api/notes/')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      const notesId = getNotes.body.find(
+        n => n.content === notesData.content
+      ).id;
+      console.log(getNotes);
+
+      const res = await api
+        .put('/api/notes/note/' + notesId)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          content: 'Updated note content',
+          importance: false
+        }) // id is in the URL, not the body
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      assert.strictEqual(Object.keys(res.body).length, 6);
+      assert.strictEqual(res.body.content, 'Updated note content');
+      assert.strictEqual(res.body.importance, false);
+    });
+  });
+
+  describe('DELETE /api/notes/note', () => {
+    test('delete and return deleted note', async () => {
+      const token = await loginAndGetToken();
+      const getNotes = await api
+        .get('/api/notes/')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      const notesId = getNotes.body.find(
+        n => n.content === notesData.content
+      ).id;
+      console.log('ID to delete:', notesId);
+      const res = await api
+        .delete('/api/notes/note/' + notesId)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      console.log(res.body);
+      assert.strictEqual(res.body.id, notesId);
+
+      // verify it's gone
+      const after = await api
+        .get('/api/notes/')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      assert.strictEqual(after.body.length, 0);
+    });
+  });
+});
