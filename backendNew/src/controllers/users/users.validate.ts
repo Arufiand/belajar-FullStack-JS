@@ -2,18 +2,24 @@
 
 import User from '../../models/users';
 import { getOneDataByFilter } from '../../core/mongoQueryHelper';
+import {
+  UserParams,
+  ValidationResult
+} from '../../constants/general.interfaces';
 
-async function validateUserUpdate({ data, id }) {
+async function validateUserUpdate({
+  username,
+  id
+}: UserParams): Promise<ValidationResult> {
   let valid = true;
   let message = '';
-
-  if (!data || Object.keys(data).length === 0) {
+  if (!username) {
     valid = false;
-    message = 'No fields provided to update';
-  } else if (data.username) {
+    message = 'Username is required';
+  } else if (username) {
     const existing = await getOneDataByFilter({
       model: User,
-      filter: { username: data.username },
+      filter: { username: username },
       single: true
     });
     if (existing && existing._id.toString() !== id) {
@@ -25,4 +31,4 @@ async function validateUserUpdate({ data, id }) {
   return { valid, message };
 }
 
-exports = { validateUserUpdate };
+export = { validateUserUpdate };

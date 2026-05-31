@@ -1,7 +1,14 @@
 import { getOneDataByFilter } from '../../core/mongoQueryHelper';
 import Notes from '../../models/notes';
+import {
+  ValidateNoteMustExistParams,
+  ValidateNoteParams,
+  ValidationResult
+} from '../../constants/general.interfaces';
 
-const validateNote = async ({ content }) => {
+const validateNote = async ({
+  content
+}: ValidateNoteParams): Promise<ValidationResult> => {
   let valid = true;
   let message = '';
 
@@ -11,7 +18,10 @@ const validateNote = async ({ content }) => {
   }
   return { valid, message };
 };
-const validateNoteMustExist = async ({ notesId, userId }) => {
+const validateNoteMustExist = async ({
+  notesId,
+  userId
+}: ValidateNoteMustExistParams): Promis<ValidationResult> => {
   let valid = true;
   let message = '';
 
@@ -28,4 +38,4 @@ const validateNoteMustExist = async ({ notesId, userId }) => {
   return { valid, message };
 };
 
-exports = { validateNote, validateNoteMustExist };
+export = { validateNote, validateNoteMustExist };

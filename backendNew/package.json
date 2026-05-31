@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "NODE_ENV=production node index.ts",
-    "dev": "NODE_ENV=development node --watch index.ts",
-    "test": "NODE_ENV=test node --test --test-concurrency=1",
+    "start": "NODE_ENV=production tsx index.ts",
+    "dev": "NODE_ENV=development tsx watch index.ts",
+    "test": "NODE_ENV=test node --import tsx/cjs --test --test-concurrency=1 src/tests/*.test.ts src/tests/integration/*.test.ts src/tests/users/*.test.ts",
+    "build": "tsc --noEmit",
     "lint": "eslint . --fix"
   },
   "keywords": [],

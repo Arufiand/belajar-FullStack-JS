@@ -119,10 +119,4 @@ const closeConnection = async () => {
   await mongoose.connection.close();
 };
 
-exports = {
-  startConnection,
-  buildUrl,
-  PORT,
-  DEFAULT_DB_ENV_KEY,
-  closeConnection
-};
+export { startConnection, buildUrl, PORT, DEFAULT_DB_ENV_KEY, closeConnection };
