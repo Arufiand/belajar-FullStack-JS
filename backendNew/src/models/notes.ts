@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 mongoose.set('strictQuery', false);
 
@@ -20,4 +20,4 @@ noteSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Note', noteSchema);
+exports = mongoose.model('Note', noteSchema);

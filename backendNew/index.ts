@@ -1,7 +1,7 @@
 'use strict';
-const logger = require('./src/helpers/logger');
-const { PORT, startConnection } = require('./src/core/databaseConfig');
-const app = require('./src/app');
+import logger from './src/helpers/logger';
+import { PORT, startConnection } from './src/core/databaseConfig';
+import app from './src/app';
 
 const index = async () => {
   try {

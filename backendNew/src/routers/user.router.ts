@@ -1,13 +1,13 @@
 'use strict';
 
-const express = require('express');
-const {
+import express from 'express';
+import {
   getAllUsers,
   deleteUser,
   updateUser,
   getUserById
-} = require('../controllers/users/users.controller');
-const { verifyToken } = require('../helpers/middleware');
+} from '../controllers/users/users.controller';
+import { verifyToken } from '../helpers/middleware';
 
 const usersRouter = express.Router();
 
@@ -16,4 +16,4 @@ usersRouter.get('/:id', getUserById);
 usersRouter.put('/', verifyToken, updateUser);
 usersRouter.delete('/', verifyToken, deleteUser);
 
-module.exports = usersRouter;
+exports = usersRouter;

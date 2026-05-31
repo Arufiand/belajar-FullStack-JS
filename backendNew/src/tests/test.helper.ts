@@ -1,12 +1,12 @@
 'use strict';
-const { beforeEach, before, after } = require('node:test');
-const supertest = require('supertest');
-const app = require('../app');
-const User = require('../models/users');
-const Notes = require('../models/notes');
-const { seedUser, loginUser, notesData } = require('./test.login.data');
-const { startConnection, closeConnection } = require('../core/databaseConfig');
-const { deleteData } = require('../core/mongoQueryHelper');
+import { beforeEach, before, after }from 'node:test';
+import supertestfrom 'supertest';
+import appfrom '../app';
+import Userfrom '../models/users';
+import Notesfrom '../models/notes';
+import { seedUser, loginUser, notesData }from './test.login.data';
+import { startConnection, closeConnection }from '../core/databaseConfig';
+import { deleteData }from '../core/mongoQueryHelper';
 
 const api = supertest(app);
 
@@ -47,7 +47,7 @@ const setupDB = () => {
   });
 };
 
-module.exports = {
+exports = {
   api,
   setupDB,
   loginAndGetToken,

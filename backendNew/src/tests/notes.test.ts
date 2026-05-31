@@ -1,8 +1,8 @@
 'use strict';
 
-const { describe, test } = require('node:test');
-const assert = require('node:assert');
-const { api, setupDB, loginAndGetToken, notesData } = require('./test.helper');
+import { describe, test } from 'node:test';
+import assert from 'node:assert';
+import { api, setupDB, loginAndGetToken, notesData } from './test.helper';
 
 setupDB();
 

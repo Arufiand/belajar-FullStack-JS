@@ -1,5 +1,5 @@
-const { getOneDataByFilter } = require('../../core/mongoQueryHelper');
-const Notes = require('../../models/notes');
+import { getOneDataByFilter } from '../../core/mongoQueryHelper';
+import Notes from '../../models/notes';
 
 const validateNote = async ({ content }) => {
   let valid = true;
@@ -11,7 +11,6 @@ const validateNote = async ({ content }) => {
   }
   return { valid, message };
 };
-/** * @param {{ notesId: string, userId: string, content?: string }} params */
 const validateNoteMustExist = async ({ notesId, userId }) => {
   let valid = true;
   let message = '';
@@ -29,4 +28,4 @@ const validateNoteMustExist = async ({ notesId, userId }) => {
   return { valid, message };
 };
 
-module.exports = { validateNote, validateNoteMustExist };
+exports = { validateNote, validateNoteMustExist };

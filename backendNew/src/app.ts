@@ -1,19 +1,19 @@
 'use strict';
-const express = require('express');
-const cors = require('cors');
-const { RequestLogger } = require('./helpers/logger');
-const {
+import express from 'express';
+import cors from 'cors';
+import { RequestLogger } from './helpers/logger';
+import {
   errorHandler,
   unknownEndpoint,
   getTokenFrom
-} = require('./helpers/middleware');
-const { listRoutes } = require('./helpers/generalHelper');
-const authRouter = require('./routers/auth.router');
-const usersRouter = require('./routers/user.router');
+} from './helpers/middleware';
+import { listRoutes } from './helpers/generalHelper';
+import authRouter from './routers/auth.router';
+import usersRouter from './routers/user.router';
 
 // Ensure all models are registered with Mongoose
-require('./models/notes');
-const notesRouter = require('./routers/notes.router');
+require('./models/notes';
+import notesRouter from './routers/notes.router';
 
 const app = express();
 
@@ -43,4 +43,4 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
-module.exports = app;
+exports = app;

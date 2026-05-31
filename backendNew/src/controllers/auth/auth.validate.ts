@@ -1,7 +1,7 @@
-const { getOneDataByFilter } = require('../../core/mongoQueryHelper');
-const User = require('../../models/users');
+import { getOneDataByFilter } from '../../core/mongoQueryHelper';
+import User from '../../models/users';
 
-async function validateAuthRegister({ data }) {
+const validateAuthRegister = async ({ data }) => {
   const { username, password, name } = data;
 
   let valid = true;
@@ -29,9 +29,9 @@ async function validateAuthRegister({ data }) {
   }
 
   return { valid, message };
-}
+};
 
-async function validateAuthLogin({ username, password }) {
+const validateAuthLogin = async ({ username, password }) => {
   let valid = true;
   let message = '';
   let user = null;
@@ -55,6 +55,6 @@ async function validateAuthLogin({ username, password }) {
   }
 
   return { valid, message, user };
-}
+};
 
-module.exports = { validateAuthRegister, validateAuthLogin };
+exports = { validateAuthRegister, validateAuthLogin };

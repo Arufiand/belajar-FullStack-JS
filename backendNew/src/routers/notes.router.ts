@@ -1,13 +1,13 @@
 'use strict';
 
-const express = require('express');
-const {
+import express from 'express';
+import {
   getNotesFromCurrentUser,
   createNote,
   updateNote,
   deleteNote
-} = require('../controllers/notes/notes.controller');
-const { verifyToken } = require('../helpers/middleware');
+} from '../controllers/notes/notes.controller';
+import { verifyToken } from '../helpers/middleware';
 
 const notesRouter = express.Router();
 
@@ -16,4 +16,4 @@ notesRouter.post('/note', verifyToken, createNote);
 notesRouter.put('/note/:id', verifyToken, updateNote);
 notesRouter.delete('/note/:id', verifyToken, deleteNote);
 
-module.exports = notesRouter;
+exports = notesRouter;

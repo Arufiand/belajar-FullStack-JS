@@ -1,10 +1,10 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { postData } = require('../../core/mongoQueryHelper');
-const User = require('../../models/users');
-const { validateAuthRegister, validateAuthLogin } = require('./auth.validate');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { postData } from '../../core/mongoQueryHelper';
+import User from '../../models/users';
+import { validateAuthRegister, validateAuthLogin } from './auth.validate';
 
 const registerUser = async (req, res) => {
   const { body } = req;
@@ -52,4 +52,4 @@ const loginUser = async (req, res) => {
   return response;
 };
 
-module.exports = { registerUser, loginUser };
+exports = { registerUser, loginUser };

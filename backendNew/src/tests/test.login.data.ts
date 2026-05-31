@@ -14,4 +14,4 @@ const notesData = {
   importance: true
 };
 
-module.exports = { seedUser, loginUser, notesData };
+exports = { seedUser, loginUser, notesData };

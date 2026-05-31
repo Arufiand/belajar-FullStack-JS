@@ -1,7 +1,8 @@
 require('dotenv').config({ override: false });
-const mongoose = require('mongoose');
-const { urlJoiner } = require('../helpers/generalHelper');
-const logger = require('../helpers/logger');
+import mongoose from 'mongoose';
+import { urlJoiner } from '../helpers/generalHelper';
+import logger from '../helpers/logger';
+
 mongoose.set('strictQuery', false);
 
 let _connecting = null;
@@ -118,7 +119,7 @@ const closeConnection = async () => {
   await mongoose.connection.close();
 };
 
-module.exports = {
+exports = {
   startConnection,
   buildUrl,
   PORT,

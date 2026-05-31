@@ -1,14 +1,14 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
-const {
+import bcrypt from 'bcrypt';
+import {
   getAllData,
   getDataFromId,
   deleteData,
   updateData
-} = require('../../core/mongoQueryHelper');
-const User = require('../../models/users');
-const { validateUserUpdate } = require('./users.validate');
+} from '../../core/mongoQueryHelper';
+import User from '../../models/users';
+import { validateUserUpdate } from './users.validate';
 
 const getAllUsers = async (req, res) => {
   const users = await getAllData({
@@ -69,4 +69,4 @@ const updateUser = async (req, res) => {
   return response;
 };
 
-module.exports = { getAllUsers, getUserById, deleteUser, updateUser };
+exports = { getAllUsers, getUserById, deleteUser, updateUser };

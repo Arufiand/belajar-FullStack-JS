@@ -31,4 +31,4 @@ const RequestLogger = (req, res, next) => {
   next();
 };
 
-module.exports = { info, error, warn, RequestLogger };
+exports = { info, error, warn, RequestLogger };

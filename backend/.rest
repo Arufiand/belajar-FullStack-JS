@@ -92,6 +92,6 @@ Authorization: Bearer {{$auth.token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2
 
 ###
 # Notes
-# Tips: # - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.js)
+# Tips: # - Start the server first: cd backend && npm run dev (or NODE_ENV=development node index.ts)
 # - Use your editor's HTTP client (JetBrains: .rest, VS Code: REST Client extension) or curl to run these.
 # - Ensure there is a blank line between headers and JSON body in POST/PUT requests.

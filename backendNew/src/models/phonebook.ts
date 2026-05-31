@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 mongoose.set('strictQuery', false);
 
@@ -34,4 +34,4 @@ phoneBookSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Phonebook', phoneBookSchema);
+exports = mongoose.model('Phonebook', phoneBookSchema);

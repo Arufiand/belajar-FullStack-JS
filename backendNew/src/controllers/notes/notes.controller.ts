@@ -1,13 +1,13 @@
 'use strict';
 
-const {
+import {
   getOneDataByFilter,
   postData,
   updateData,
   deleteData
-} = require('../../core/mongoQueryHelper');
-const Notes = require('../../models/notes');
-const { validateNote, validateNoteMustExist } = require('./notes.validate');
+} from '../../core/mongoQueryHelper';
+import Notes from '../../models/notes';
+import { validateNote, validateNoteMustExist } from './notes.validate';
 
 const getNotesFromCurrentUser = async (req, res) => {
   const id = req.user.id;
@@ -70,7 +70,7 @@ const deleteNote = async (req, res) => {
   return res.status(200).json(note);
 };
 
-module.exports = {
+exports = {
   getNotesFromCurrentUser,
   createNote,
   updateNote,

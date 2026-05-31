@@ -1,7 +1,7 @@
 'use strict';
 
-const User = require('../../models/users');
-const { getOneDataByFilter } = require('../../core/mongoQueryHelper');
+import User from '../../models/users';
+import { getOneDataByFilter } from '../../core/mongoQueryHelper';
 
 async function validateUserUpdate({ data, id }) {
   let valid = true;
@@ -25,4 +25,4 @@ async function validateUserUpdate({ data, id }) {
   return { valid, message };
 }
 
-module.exports = { validateUserUpdate };
+exports = { validateUserUpdate };

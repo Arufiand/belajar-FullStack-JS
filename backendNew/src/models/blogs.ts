@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 mongoose.set('strictQuery', false);
 
@@ -23,4 +23,4 @@ blogSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Blog', blogSchema);
+exports = mongoose.model('Blog', blogSchema);

@@ -1,10 +1,10 @@
 'use strict';
 
-const { describe, test } = require('node:test');
-const { getAllData } = require('../../core/mongoQueryHelper');
-const User = require('../../models/users');
-const assert = require('node:assert');
-const { api, setupDB, seedUser, loginUser } = require('../test.helper');
+import { describe, test } from 'node:test';
+import { getAllData } from '../../core/mongoQueryHelper';
+import User from '../../models/users';
+import assert from 'node:assert';
+import { api, setupDB, seedUser, loginUser } from '../test.helper';
 
 setupDB();
 

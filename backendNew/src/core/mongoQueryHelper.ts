@@ -35,7 +35,7 @@ const postData = async ({ model, data }) => {
   return await newDoc.save();
 };
 
-module.exports = {
+exports = {
   getDataFromId,
   getOneDataByFilter,
   getAllData,
