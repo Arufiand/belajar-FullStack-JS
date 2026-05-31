@@ -8,6 +8,17 @@ setupDB();
 
 describe('Notes API', () => {
   describe('POST /api/notes/note', () => {
+    test('create notes without content should fail', async () => {
+      const token = await loginAndGetToken();
+      const response = await api
+        .post('/api/notes/note')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ importance: true })
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+
+      assert.strictEqual(response.body.error, "Content can't be empty");
+    });
     test('create and return created note', async () => {
       const token = await loginAndGetToken();
       const res = await api
@@ -50,7 +61,8 @@ describe('Notes API', () => {
       const notesId = getNotes.body.find(
         n => n.content === notesData.content
       ).id;
-      console.log(getNotes);
+
+      console.log(`isiResponse ${JSON.stringify(getNotes, null, 2)}`);
 
       const res = await api
         .put('/api/notes/note/' + notesId)
@@ -58,9 +70,10 @@ describe('Notes API', () => {
         .send({
           content: 'Updated note content',
           importance: false
-        }) // id is in the URL, not the body
+        })
         .expect(200)
         .expect('Content-Type', /application\/json/);
+      console.log(`res ${JSON.stringify(res)}`);
       assert.strictEqual(Object.keys(res.body).length, 6);
       assert.strictEqual(res.body.content, 'Updated note content');
       assert.strictEqual(res.body.importance, false);
@@ -77,14 +90,12 @@ describe('Notes API', () => {
       const notesId = getNotes.body.find(
         n => n.content === notesData.content
       ).id;
-      console.log('ID to delete:', notesId);
       const res = await api
         .delete('/api/notes/note/' + notesId)
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      console.log(res.body);
       assert.strictEqual(res.body.id, notesId);
 
       // verify it's gone

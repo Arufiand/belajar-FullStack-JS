@@ -22,8 +22,8 @@ const createNote = async (req, res) => {
   const id = req.user.id;
   const { content, importance } = req.body;
   const validate = await validateNote({ content });
-  if (!validate) {
-    return res.status(400).send(validate.message);
+  if (!validate.valid) {
+    return res.status(400).json({ error: validate.message });
   }
   const note = await postData({
     model: Notes,
@@ -42,12 +42,10 @@ const updateNote = async (req, res) => {
   const notesId = req.params.id;
   const { content, importance } = req.body;
   const validate = await validateNoteMustExist({
-    content: content,
     notesId: notesId,
-    users: userId,
-    isUpdate: true
+    users: userId
   });
-  if (!validate) {
+  if (!validate.valid) {
     return res.status(400).json({ error: validate.message });
   }
   const note = await updateData({
@@ -65,7 +63,7 @@ const deleteNote = async (req, res) => {
     notesId: noteId,
     users: userId
   });
-  if (!validate) {
+  if (!validate.valid) {
     return res.status(400).json({ error: validate.message });
   }
   const note = await deleteData({ model: Notes, id: noteId });

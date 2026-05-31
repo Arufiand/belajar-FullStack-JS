@@ -12,19 +12,10 @@ const validateNote = async ({ content }) => {
   return { valid, message };
 };
 
-const validateNoteMustExist = async ({
-  content,
-  notesId,
-  userId,
-  isUpdate = false
-}) => {
+const validateNoteMustExist = async ({ notesId, userId }) => {
   let valid = true;
   let message = '';
-  const validate = await validateNote({ content: content });
-  if (!validate && !isUpdate) {
-    valid = validate.valid;
-    message = validate.message;
-  }
+
   const note = await getOneDataByFilter({
     model: Notes,
     filter: { _id: notesId, users: userId },
