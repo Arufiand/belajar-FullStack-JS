@@ -59,7 +59,7 @@ describe('Notes API', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
       const notesId = getNotes.body.find(
-        n => n.content === notesData.content
+        (n: any) => n.content === notesData.content
       ).id;
 
       const res = await api
@@ -85,7 +85,7 @@ describe('Notes API', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
       const notesId = getNotes.body.find(
-        n => n.content === notesData.content
+        (n: any) => n.content === notesData.content
       ).id;
       const res = await api
         .delete('/api/notes/note/' + notesId)
