@@ -11,6 +11,10 @@ const { listRoutes } = require('./helpers/generalHelper');
 const authRouter = require('./routers/router.auth');
 const usersRouter = require('./routers/router.users');
 
+// Ensure all models are registered with Mongoose
+require('./models/notes');
+require('./models/blogs');
+
 const app = express();
 
 app.use(cors());

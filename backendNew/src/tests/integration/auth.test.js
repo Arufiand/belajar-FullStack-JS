@@ -9,6 +9,7 @@ const {
   startConnection,
   closeConnection
 } = require('../../core/databaseConfig');
+const { seedUser, loginUser } = require('../test.login.data');
 const api = supertest(app);
 
 before(async () => {
@@ -25,13 +26,7 @@ after(async () => {
 
 describe('Registration and Authentication ', () => {
   test('User Doing Registration', async () => {
-    const newRegisterUser = {
-      username: 'mluukkai',
-      password: 'salainen',
-      name: 'Matti'
-    };
-
-    await api.post('/api/auth/register').send(newRegisterUser).expect(201);
+    await api.post('/api/auth/register').send(seedUser).expect(201);
 
     const allUsers = await getAllData({ model: User });
     const newlyCreatedUser = allUsers.find(u => u.username === 'mluukkai');
@@ -39,19 +34,7 @@ describe('Registration and Authentication ', () => {
   });
 
   test('User doing login with username and password just created', async () => {
-    await api
-      .post('/api/auth/register')
-      .send({
-        username: 'mluukkai',
-        password: 'salainen',
-        name: 'Matti'
-      })
-      .expect(201);
-
-    const userLoginData = {
-      username: 'mluukkai',
-      password: 'salainen'
-    };
-    await api.post('/api/auth/login').send(userLoginData).expect(200);
+    await api.post('/api/auth/register').send(seedUser).expect(201);
+    await api.post('/api/auth/login').send(loginUser).expect(200);
   });
 });
