@@ -7,6 +7,7 @@ const {
   deleteData
 } = require('../../core/mongoQueryHelper');
 const Notes = require('../../models/notes');
+const { validateNote, validateNoteMustExist } = require('./notes.validate');
 
 const getNotesFromCurrentUser = async (req, res) => {
   const id = req.user.id;
@@ -20,6 +21,10 @@ const getNotesFromCurrentUser = async (req, res) => {
 const createNote = async (req, res) => {
   const id = req.user.id;
   const { content, importance } = req.body;
+  const validate = await validateNote({ content });
+  if (!validate) {
+    return res.status(400).send(validate.message);
+  }
   const note = await postData({
     model: Notes,
     data: {
@@ -36,19 +41,15 @@ const updateNote = async (req, res) => {
   const userId = req.user.id;
   const notesId = req.params.id;
   const { content, importance } = req.body;
-
-  // verify the note belongs to the logged-in user
-  const existing = await getOneDataByFilter({
-    model: Notes,
-    filter: { _id: notesId, users: userId },
-    single: true
+  const validate = await validateNoteMustExist({
+    content: content,
+    notesId: notesId,
+    users: userId,
+    isUpdate: true
   });
-  if (!existing) {
-    return res
-      .status(404)
-      .json({ error: 'Note not found or not owned by user' });
+  if (!validate) {
+    return res.status(400).json({ error: validate.message });
   }
-
   const note = await updateData({
     model: Notes,
     id: notesId,
@@ -58,18 +59,14 @@ const updateNote = async (req, res) => {
 };
 
 const deleteNote = async (req, res) => {
-  const id = req.user.id;
+  const userId = req.user.id;
   const noteId = req.params.id;
-  const existing = await getOneDataByFilter({
-    model: Notes,
-    filter: { _id: noteId, users: id },
-    single: true
+  const validate = await validateNoteMustExist({
+    notesId: noteId,
+    users: userId
   });
-
-  if (!existing) {
-    return res
-      .status(404)
-      .json({ error: 'Note not found or not owned by user' });
+  if (!validate) {
+    return res.status(400).json({ error: validate.message });
   }
   const note = await deleteData({ model: Notes, id: noteId });
   return res.status(200).json(note);
