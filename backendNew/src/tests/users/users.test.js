@@ -3,38 +3,10 @@
 const { describe, test, beforeEach, before, after } = require('node:test');
 const { getAllData } = require('../../core/mongoQueryHelper');
 const User = require('../../models/users');
-
-const supertest = require('supertest');
-const app = require('../../app');
 const assert = require('node:assert');
-const {
-  startConnection,
-  closeConnection
-} = require('../../core/databaseConfig');
-const { seedUser, loginUser } = require('../test.login.data');
-const api = supertest(app);
+const { api, setupDB, seedUser, loginAndGetToken } = require('../test.helper');
 
-// Seed user used across tests
-
-// Helper: register + login → returns token
-const loginAndGetToken = async () => {
-  const res = await api.post('/api/auth/login').send(loginUser).expect(200);
-  return res.body.token;
-};
-
-before(async () => {
-  await startConnection();
-});
-
-beforeEach(async () => {
-  await User.deleteMany({});
-  // seed a fresh user before every test
-  await api.post('/api/auth/register').send(seedUser).expect(201);
-});
-
-after(async () => {
-  await closeConnection();
-});
+setupDB();
 
 describe('Users API', () => {
   describe('GET /api/users', () => {

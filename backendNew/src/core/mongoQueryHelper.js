@@ -19,12 +19,15 @@ const getAllData = async ({ model, populate, select }) => {
   return await query;
 };
 
-const deleteData = async ({ model, id }) => {
-  return await model.findByIdAndDelete(id);
+const deleteData = async ({ allData = false, model, id = null }) => {
+  return allData ? await model.deleteMany() : await model.findByIdAndDelete(id);
 };
 
 const updateData = async ({ model, id, data }) => {
-  return await model.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
+  return await model.findByIdAndUpdate(id, data, {
+    returnDocument: 'after',
+    runValidators: true
+  });
 };
 
 const postData = async ({ model, data }) => {

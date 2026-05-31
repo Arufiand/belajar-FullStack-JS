@@ -8,8 +8,8 @@ const {
   getTokenFrom
 } = require('./helpers/middleware');
 const { listRoutes } = require('./helpers/generalHelper');
-const authRouter = require('./routers/router.auth');
-const usersRouter = require('./routers/router.users');
+const authRouter = require('./routers/auth.router');
+const usersRouter = require('./routers/user.router');
 
 // Ensure all models are registered with Mongoose
 require('./models/notes');

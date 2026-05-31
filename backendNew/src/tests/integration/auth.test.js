@@ -1,40 +1,25 @@
-const { describe, test, beforeEach, before, after } = require('node:test');
+'use strict';
+
+const { describe, test } = require('node:test');
 const { getAllData } = require('../../core/mongoQueryHelper');
 const User = require('../../models/users');
-
-const supertest = require('supertest');
-const app = require('../../app');
 const assert = require('node:assert');
-const {
-  startConnection,
-  closeConnection
-} = require('../../core/databaseConfig');
-const { seedUser, loginUser } = require('../test.login.data');
-const api = supertest(app);
+const { api, setupDB, seedUser, loginUser } = require('../test.helper');
 
-before(async () => {
-  await startConnection();
-});
-
-beforeEach(async () => {
-  await User.deleteMany({});
-});
-
-after(async () => {
-  await closeConnection();
-});
+setupDB();
 
 describe('Registration and Authentication ', () => {
   test('User Doing Registration', async () => {
-    await api.post('/api/auth/register').send(seedUser).expect(201);
-
+    // seedUser is already registered by setupDB's beforeEach
     const allUsers = await getAllData({ model: User });
-    const newlyCreatedUser = allUsers.find(u => u.username === 'mluukkai');
-    assert.strictEqual(newlyCreatedUser.username, 'mluukkai');
+    const newlyCreatedUser = allUsers.find(
+      u => u.username === seedUser.username
+    );
+    assert.strictEqual(newlyCreatedUser.username, seedUser.username);
   });
 
   test('User doing login with username and password just created', async () => {
-    await api.post('/api/auth/register').send(seedUser).expect(201);
+    // seedUser is already registered by setupDB's beforeEach
     await api.post('/api/auth/login').send(loginUser).expect(200);
   });
 });
