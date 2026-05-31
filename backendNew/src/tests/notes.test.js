@@ -62,8 +62,6 @@ describe('Notes API', () => {
         n => n.content === notesData.content
       ).id;
 
-      console.log(`isiResponse ${JSON.stringify(getNotes, null, 2)}`);
-
       const res = await api
         .put('/api/notes/note/' + notesId)
         .set('Authorization', `Bearer ${token}`)
@@ -73,7 +71,6 @@ describe('Notes API', () => {
         })
         .expect(200)
         .expect('Content-Type', /application\/json/);
-      console.log(`res ${JSON.stringify(res)}`);
       assert.strictEqual(Object.keys(res.body).length, 6);
       assert.strictEqual(res.body.content, 'Updated note content');
       assert.strictEqual(res.body.importance, false);

@@ -11,7 +11,7 @@ const validateNote = async ({ content }) => {
   }
   return { valid, message };
 };
-
+/** * @param {{ notesId: string, userId: string, content?: string }} params */
 const validateNoteMustExist = async ({ notesId, userId }) => {
   let valid = true;
   let message = '';

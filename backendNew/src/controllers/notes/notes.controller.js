@@ -43,7 +43,7 @@ const updateNote = async (req, res) => {
   const { content, importance } = req.body;
   const validate = await validateNoteMustExist({
     notesId: notesId,
-    users: userId
+    userId: userId
   });
   if (!validate.valid) {
     return res.status(400).json({ error: validate.message });
@@ -61,7 +61,7 @@ const deleteNote = async (req, res) => {
   const noteId = req.params.id;
   const validate = await validateNoteMustExist({
     notesId: noteId,
-    users: userId
+    userId: userId
   });
   if (!validate.valid) {
     return res.status(400).json({ error: validate.message });
