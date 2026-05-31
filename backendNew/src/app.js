@@ -13,7 +13,7 @@ const usersRouter = require('./routers/user.router');
 
 // Ensure all models are registered with Mongoose
 require('./models/notes');
-require('./models/blogs');
+const notesRouter = require('./routers/notes.router');
 
 const app = express();
 
@@ -24,6 +24,7 @@ app.use(getTokenFrom);
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/notes', notesRouter);
 
 if (process.env.NODE_ENV === 'development') {
   app.get('/api/routes', (req, res) => {
