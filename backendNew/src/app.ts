@@ -1,4 +1,3 @@
-'use strict';
 import express from 'express';
 import cors from 'cors';
 import { RequestLogger } from './helpers/logger';
@@ -12,7 +11,7 @@ import authRouter from './routers/auth.router';
 import usersRouter from './routers/user.router';
 
 // Ensure all models are registered with Mongoose
-require('./models/notes';
+import './models/notes';
 import notesRouter from './routers/notes.router';
 
 const app = express();
@@ -43,4 +42,4 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
-exports = app;
+export default app;

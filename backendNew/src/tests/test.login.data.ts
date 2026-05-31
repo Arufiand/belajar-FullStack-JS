@@ -1,17 +1,15 @@
-const seedUser = {
+export const seedUser = {
   username: 'mluukkai',
   password: 'salainen',
   name: 'Matti Luukkainen'
 };
 
-const loginUser = {
+export const loginUser = {
   username: 'mluukkai',
   password: 'salainen'
 };
 
-const notesData = {
+export const notesData = {
   content: 'Test note content',
   importance: true
 };
-
-exports = { seedUser, loginUser, notesData };

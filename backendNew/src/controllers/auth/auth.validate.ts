@@ -2,6 +2,7 @@ import { getOneDataByFilter } from '../../core/mongoQueryHelper';
 import User from '../../models/users';
 import {
   AuthParams,
+  AuthLoginResult,
   ValidationResult
 } from '../../constants/general.interfaces';
 
@@ -33,17 +34,16 @@ const validateAuthRegister = async ({
       message = 'Username already exists';
     }
   }
-
   return { valid, message };
 };
 
 const validateAuthLogin = async ({
   username,
   password
-}: AuthParams): Promise<ValidationResult> => {
+}: AuthParams): Promise<AuthLoginResult> => {
   let valid = true;
   let message = '';
-  let user = null;
+  let user: any = null;
 
   if (!username) {
     valid = false;
@@ -62,8 +62,7 @@ const validateAuthLogin = async ({
       message = 'Username not found';
     }
   }
-
   return { valid, message, user };
 };
 
-export = { validateAuthRegister, validateAuthLogin };
+export { validateAuthRegister, validateAuthLogin };

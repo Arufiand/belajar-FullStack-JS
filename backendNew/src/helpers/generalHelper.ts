@@ -1,6 +1,7 @@
-function urlJoiner(base = '', path = '') {
+import { Router } from 'express';
+
+function urlJoiner(base = '', path = ''): string {
   if (!base) throw new Error('MONGOURL is required');
-  // Split base into the URL part and query string
   const [baseUrl, queryString] = base.split('?');
   const b = baseUrl.replace(/\/+$/, '');
   const p = path.replace(/^\/+/, '');
@@ -8,12 +9,22 @@ function urlJoiner(base = '', path = '') {
   return queryString ? `${joined}?${queryString}` : joined;
 }
 
-const listRoutes = routers => {
-  const routes = [];
+interface RouterEntry {
+  prefix: string;
+  router: Router;
+}
+
+interface RouteInfo {
+  method: string;
+  path: string;
+}
+
+const listRoutes = (routers: RouterEntry[]): RouteInfo[] => {
+  const routes: RouteInfo[] = [];
   routers.forEach(({ prefix, router }) => {
-    router.stack.forEach(layer => {
+    router.stack.forEach((layer: any) => {
       if (layer.route) {
-        const methods = Object.keys(layer.route.methods).map(m =>
+        const methods = Object.keys(layer.route.methods).map((m: string) =>
           m.toUpperCase()
         );
         routes.push({
@@ -26,4 +37,4 @@ const listRoutes = routers => {
   return routes;
 };
 
-exports = { urlJoiner, listRoutes };
+export { urlJoiner, listRoutes };

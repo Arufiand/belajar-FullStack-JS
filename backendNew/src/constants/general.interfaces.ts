@@ -3,9 +3,13 @@ export interface ValidationResult {
   message: string;
 }
 
-//Notes Area Validation
+export interface AuthLoginResult extends ValidationResult {
+  user: any | null;
+}
+
+// Notes Area Validation
 export interface ValidateNoteParams {
-  content: string;
+  content?: string;
 }
 
 export interface ValidateNoteMustExistParams {
@@ -14,16 +18,15 @@ export interface ValidateNoteMustExistParams {
   content?: string;
 }
 
-// End
-
-// Validate Auth Area
+// Auth Area Validation
 export interface AuthParams {
-  username: String;
-  password: String;
-  name?: String;
+  username?: string;
+  password?: string;
+  name?: string;
 }
 
-export interface UserParams {
-  username: String;
+// Users Area Validation
+export interface ValidateUserUpdateParams {
+  data: Record<string, unknown>;
   id: string;
 }

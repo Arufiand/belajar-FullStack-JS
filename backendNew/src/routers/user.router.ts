@@ -1,5 +1,3 @@
-'use strict';
-
 import express from 'express';
 import {
   getAllUsers,
@@ -16,4 +14,4 @@ usersRouter.get('/:id', getUserById);
 usersRouter.put('/', verifyToken, updateUser);
 usersRouter.delete('/', verifyToken, deleteUser);
 
-exports = usersRouter;
+export default usersRouter;

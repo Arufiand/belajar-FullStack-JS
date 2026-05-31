@@ -1,53 +1,62 @@
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import logger from './logger';
+import * as logger from './logger';
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' });
+const unknownEndpoint = (_req: Request, res: Response): void => {
+  res.status(404).send({ error: 'unknown endpoint' });
 };
 
-const errorHandler = (error, request, response, next) => {
-  logger.error(error.message);
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' });
-  } else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message });
+const errorHandler = (
+  err: Error & { name: string },
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  logger.error(err.message);
+  if (err.name === 'CastError') {
+    res.status(400).send({ error: 'malformatted id' });
+  } else if (err.name === 'ValidationError') {
+    res.status(400).json({ error: err.message });
   } else if (
-    error.name === 'MongoServerError' &&
-    error.message.includes('E11000 duplicate key error')
+    err.name === 'MongoServerError' &&
+    err.message.includes('E11000 duplicate key error')
   ) {
-    return response
-      .status(400)
-      .json({ error: 'expected `username` to be unique' });
-  } else if (error.name === 'JsonWebTokenError') {
-    return response.status(401).json({ error: 'invalid token' });
-  } else if (error.name === 'TokenExpiredError') {
-    return response.status(401).json({ error: 'token expired' });
+    res.status(400).json({ error: 'expected `username` to be unique' });
+  } else if (err.name === 'JsonWebTokenError') {
+    res.status(401).json({ error: 'invalid token' });
+  } else if (err.name === 'TokenExpiredError') {
+    res.status(401).json({ error: 'token expired' });
+  } else {
+    next(err);
   }
-
-  next(error);
 };
 
-const getTokenFrom = (req, res, next) => {
+const getTokenFrom = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
   const authorization = req.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    req.token = authorization.substring(7);
-  } else {
-    req.token = null;
-  }
+  req.token = authorization?.toLowerCase().startsWith('bearer ')
+    ? authorization.substring(7)
+    : null;
   next();
 };
 
-const verifyToken = (req, res, next) => {
+const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.token) {
-    return res.status(401).json({ error: 'token missing' });
+    res.status(401).json({ error: 'token missing' });
+    return;
   }
   try {
-    req.user = jwt.verify(req.token, process.env.SECRET);
+    req.user = jwt.verify(req.token, process.env.SECRET as string) as {
+      username: string;
+      id: string;
+    };
     next();
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-exports = { unknownEndpoint, errorHandler, getTokenFrom, verifyToken };
+export { unknownEndpoint, errorHandler, getTokenFrom, verifyToken };

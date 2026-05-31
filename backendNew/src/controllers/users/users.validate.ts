@@ -1,34 +1,32 @@
-'use strict';
-
 import User from '../../models/users';
 import { getOneDataByFilter } from '../../core/mongoQueryHelper';
 import {
-  UserParams,
+  ValidateUserUpdateParams,
   ValidationResult
 } from '../../constants/general.interfaces';
 
 async function validateUserUpdate({
-  username,
+  data,
   id
-}: UserParams): Promise<ValidationResult> {
+}: ValidateUserUpdateParams): Promise<ValidationResult> {
   let valid = true;
   let message = '';
-  if (!username) {
+
+  if (!data || Object.keys(data).length === 0) {
     valid = false;
-    message = 'Username is required';
-  } else if (username) {
+    message = 'No fields provided to update';
+  } else if (data.username) {
     const existing = await getOneDataByFilter({
       model: User,
-      filter: { username: username },
+      filter: { username: data.username },
       single: true
     });
-    if (existing && existing._id.toString() !== id) {
+    if (existing && (existing as any)._id.toString() !== id) {
       valid = false;
       message = 'Username already taken';
     }
   }
-
   return { valid, message };
 }
 
-export = { validateUserUpdate };
+export { validateUserUpdate };

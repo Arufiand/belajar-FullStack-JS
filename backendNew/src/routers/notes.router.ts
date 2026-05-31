@@ -1,5 +1,3 @@
-'use strict';
-
 import express from 'express';
 import {
   getNotesFromCurrentUser,
@@ -16,4 +14,4 @@ notesRouter.post('/note', verifyToken, createNote);
 notesRouter.put('/note/:id', verifyToken, updateNote);
 notesRouter.delete('/note/:id', verifyToken, deleteNote);
 
-exports = notesRouter;
+export default notesRouter;

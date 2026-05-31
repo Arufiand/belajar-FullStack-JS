@@ -18,13 +18,13 @@ const validateNote = async ({
   }
   return { valid, message };
 };
+
 const validateNoteMustExist = async ({
   notesId,
   userId
-}: ValidateNoteMustExistParams): Promis<ValidationResult> => {
+}: ValidateNoteMustExistParams): Promise<ValidationResult> => {
   let valid = true;
   let message = '';
-
   const note = await getOneDataByFilter({
     model: Notes,
     filter: { _id: notesId, users: userId },
@@ -34,8 +34,7 @@ const validateNoteMustExist = async ({
     valid = false;
     message = 'Note not found or not owned by user';
   }
-
   return { valid, message };
 };
 
-export = { validateNote, validateNoteMustExist };
+export { validateNote, validateNoteMustExist };
